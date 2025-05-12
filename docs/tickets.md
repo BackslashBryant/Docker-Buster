@@ -18,11 +18,11 @@
     - [x] Extract license info from SBOM
     - [x] Display license summary in report
 
-- [ ] **Risk Scoring Engine**
+- [x] **Risk Scoring Engine**
   - Implement weighted risk scoring (CVE severity, secrets presence).
   - Sub-tasks:
-    - [ ] Define scoring algorithm
-    - [ ] Integrate secrets/config hygiene checks
+    - [x] Define scoring algorithm
+    - [x] Integrate secrets/config hygiene checks
 
 - [ ] **Report Builder: PDF + JSON + signature**
   - Combine SBOM and scan results into HTML → PDF (WeasyPrint).
