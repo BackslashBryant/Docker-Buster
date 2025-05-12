@@ -1,10 +1,10 @@
 ## Backlog
 
-- [ ] **SBOM Generation: Support local images**
+- [x] **SBOM Generation: Support local images**
   - Use `syft -o cyclonedx-json` to generate SBOM from local Docker images.
   - Sub-tasks:
-    - [ ] Integrate Syft CLI invocation
-    - [ ] Parse and validate CycloneDX JSON output
+    - [x] Integrate Syft CLI invocation
+    - [x] Parse and validate CycloneDX JSON output
 
 - [ ] **Vulnerability & License Scan: CVE listing**
   - Use `grype` to scan for Critical & High CVEs.
