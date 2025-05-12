@@ -12,11 +12,11 @@
     - [x] Integrate Grype CLI invocation
     - [x] Parse CVE results, filter by severity
 
-- [ ] **Vulnerability & License Scan: SPDX license detection**
+- [x] **Vulnerability & License Scan: SPDX license detection**
   - Detect and list SPDX licenses from image contents.
   - Sub-tasks:
-    - [ ] Extract license info from SBOM
-    - [ ] Display license summary in report
+    - [x] Extract license info from SBOM
+    - [x] Display license summary in report
 
 - [ ] **Risk Scoring Engine**
   - Implement weighted risk scoring (CVE severity, secrets presence).
