@@ -40,3 +40,10 @@
     - [ ] Responsive layout and accessibility polish
     - [ ] Minimal, professional styling (Tailwind + shadcn/ui)
     - [ ] Manual end-to-end test: scan and download report
+    - [ ] **Branding & Visual Identity**: Custom logo/icon, bold type, animated background
+    - [ ] **Layout & Flow**: Centered card, entrance animation, mobile-friendly
+    - [ ] **Form & Interactions**: Floating label, animated button, keyboard-friendly
+    - [ ] **Progress & Feedback**: Animated progress, playful microcopy, toasts
+    - [ ] **Results & Downloads**: Risk badge, glassy download buttons, collapsible details
+    - [ ] **Polish**: Subtle hover/focus, modern palette, minimal footer
+    - [ ] **Catchy Language**: Memorable, playful, frictionless copy throughout
