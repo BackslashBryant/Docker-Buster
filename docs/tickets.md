@@ -6,11 +6,11 @@
     - [x] Integrate Syft CLI invocation
     - [x] Parse and validate CycloneDX JSON output
 
-- [ ] **Vulnerability & License Scan: CVE listing**
+- [x] **Vulnerability & License Scan: CVE listing**
   - Use `grype` to scan for Critical & High CVEs.
   - Sub-tasks:
-    - [ ] Integrate Grype CLI invocation
-    - [ ] Parse CVE results, filter by severity
+    - [x] Integrate Grype CLI invocation
+    - [x] Parse CVE results, filter by severity
 
 - [ ] **Vulnerability & License Scan: SPDX license detection**
   - Detect and list SPDX licenses from image contents.
@@ -25,16 +25,15 @@
     - [ ] Integrate secrets/config hygiene checks
 
 - [ ] **Report Builder: PDF + JSON + signature**
-  - Combine SBOM and scan results into HTML, convert to PDF (WeasyPrint), and generate JSON.
+  - Combine SBOM and scan results into HTML → PDF (WeasyPrint).
   - Sub-tasks:
-    - [ ] HTML report template
-    - [ ] PDF export via WeasyPrint
-    - [ ] JSON report structure
-    - [ ] SHA-256 manifest + detached signature
+    - [ ] Generate HTML report
+    - [ ] Export PDF and JSON
+    - [ ] Add SHA-256 manifest + detached signature
 
-- [ ] **UI: Image input, progress, download**
-  - Simple React/Tailwind UI for image name input, progress bar, and download link.
+- [ ] **UI: Simple React/Tailwind**
+  - Image name input, progress bar, download link.
   - Sub-tasks:
-    - [ ] Image name input form
-    - [ ] Progress indicator
-    - [ ] Download link for report bundle
+    - [ ] Scaffold Next.js + Tailwind frontend
+    - [ ] Connect to backend endpoints
+    - [ ] Implement progress and download UX
