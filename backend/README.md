@@ -30,9 +30,14 @@ POST `/license-scan`
 - Body: `{ "image": "<docker-image-name>" }`
 - Returns: List of unique SPDX license IDs found in the image
 
+POST `/risk-score`
+- Body: `{ "image": "<docker-image-name>" }`
+- Returns: Weighted risk score, CVE counts, and secrets detection
+
 ### Example
 ```sh
 curl -X POST http://localhost:8000/sbom -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
 curl -X POST http://localhost:8000/cve-scan -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
 curl -X POST http://localhost:8000/license-scan -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
+curl -X POST http://localhost:8000/risk-score -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
 ```

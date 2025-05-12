@@ -74,3 +74,52 @@ def license_scan(req: LicenseScanRequest):
         raise HTTPException(status_code=500, detail=f"Syft error: {e.stderr}")
     except json.JSONDecodeError:
         raise HTTPException(status_code=500, detail="Invalid SBOM JSON output.")
+
+class RiskScoreRequest(BaseModel):
+    image: str
+
+@app.post("/risk-score")
+def risk_score(req: RiskScoreRequest):
+    try:
+        # Run Grype for CVEs
+        grype_result = subprocess.run(
+            ["grype", req.image, "-o", "json"],
+            capture_output=True, text=True, check=True
+        )
+        grype_output = json.loads(grype_result.stdout)
+        matches = grype_output.get("matches", [])
+        # Count CVEs by severity
+        cve_counts = {"Critical": 0, "High": 0, "Medium": 0, "Low": 0}
+        for m in matches:
+            sev = m["vulnerability"]["severity"]
+            if sev in cve_counts:
+                cve_counts[sev] += 1
+        # Run Syft for secrets/config hygiene (simple env var check)
+        syft_result = subprocess.run(
+            ["syft", req.image, "-o", "cyclonedx-json"],
+            capture_output=True, text=True, check=True
+        )
+        sbom = json.loads(syft_result.stdout)
+        secrets_found = False
+        for comp in sbom.get("components", []):
+            envs = comp.get("properties", [])
+            for prop in envs:
+                if prop.get("name", "").upper() in ["AWS_SECRET_ACCESS_KEY", "SECRET_KEY", "API_KEY"]:
+                    secrets_found = True
+        # Weighted score: Critical=5, High=3, Medium=1, Low=0.5, secrets=10
+        score = (
+            cve_counts["Critical"] * 5 +
+            cve_counts["High"] * 3 +
+            cve_counts["Medium"] * 1 +
+            cve_counts["Low"] * 0.5 +
+            (10 if secrets_found else 0)
+        )
+        return {
+            "risk_score": score,
+            "cve_counts": cve_counts,
+            "secrets_found": secrets_found
+        }
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Scan error: {e.stderr}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Invalid scan JSON output.")
