@@ -8,7 +8,7 @@
    ```sh
    pip install -r requirements.txt
    ```
-2. Ensure [Syft](https://github.com/anchore/syft) is installed and available in your PATH.
+2. Ensure [Syft](https://github.com/anchore/syft) and [Grype](https://github.com/anchore/grype) are installed and available in your PATH.
 
 ### Run the API
 
@@ -22,7 +22,12 @@ POST `/sbom`
 - Body: `{ "image": "<docker-image-name>" }`
 - Returns: CycloneDX JSON SBOM or error
 
+POST `/cve-scan`
+- Body: `{ "image": "<docker-image-name>" }`
+- Returns: List of Critical & High CVEs
+
 ### Example
 ```sh
 curl -X POST http://localhost:8000/sbom -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
+curl -X POST http://localhost:8000/cve-scan -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
 ```
