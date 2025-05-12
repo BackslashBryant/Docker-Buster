@@ -1,0 +1,12 @@
+product_name: <PRODUCT_NAME>
+vision: |
+  <One-sentence vision statement>
+features:
+  - <Feature 1>
+  - <Feature 2>
+non_functional:
+  - <Non-functional requirement 1>
+  - <Non-functional requirement 2>
+acceptance_tests:
+  - <Acceptance test 1>
+  - <Acceptance test 2>

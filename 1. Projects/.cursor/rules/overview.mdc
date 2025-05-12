@@ -1,0 +1,20 @@
+# Project Overview
+
+## Purpose
+Establish a modern, maintainable baseline for full-stack projects using Next.js (TypeScript) for frontend and FastAPI (Python) for backend.
+
+## Default Stacks
+- **Frontend:** Next.js (TypeScript), Tailwind CSS, shadcn/ui
+- **Backend:** FastAPI (Python)
+
+## Testing
+- **Backend:** Pytest
+- **Frontend:** Jest, React Testing Library
+
+## CI
+- GitHub Actions for lint, test, build
+
+## Coding Conventions
+- Functional JavaScript/TypeScript
+- Conventional Commits
+- Minimal, example-driven unit tests
