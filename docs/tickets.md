@@ -37,3 +37,6 @@
     - [ ] Scaffold Next.js + Tailwind frontend
     - [ ] Connect to backend endpoints
     - [ ] Implement progress and download UX
+    - [ ] Responsive layout and accessibility polish
+    - [ ] Minimal, professional styling (Tailwind + shadcn/ui)
+    - [ ] Manual end-to-end test: scan and download report
