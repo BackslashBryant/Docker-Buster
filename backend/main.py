@@ -49,3 +49,28 @@ def cve_scan(req: CVEScanRequest):
         raise HTTPException(status_code=500, detail=f"Grype error: {e.stderr}")
     except json.JSONDecodeError:
         raise HTTPException(status_code=500, detail="Invalid Grype JSON output.")
+
+class LicenseScanRequest(BaseModel):
+    image: str
+
+@app.post("/license-scan")
+def license_scan(req: LicenseScanRequest):
+    try:
+        result = subprocess.run(
+            ["syft", req.image, "-o", "cyclonedx-json"],
+            capture_output=True, text=True, check=True
+        )
+        sbom = json.loads(result.stdout)
+        components = sbom.get("components", [])
+        licenses = set()
+        for comp in components:
+            lic_info = comp.get("licenses", [])
+            for lic in lic_info:
+                lic_id = lic.get("license", {}).get("id")
+                if lic_id:
+                    licenses.add(lic_id)
+        return {"spdx_licenses": sorted(list(licenses))}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Syft error: {e.stderr}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Invalid SBOM JSON output.")

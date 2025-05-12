@@ -26,8 +26,13 @@ POST `/cve-scan`
 - Body: `{ "image": "<docker-image-name>" }`
 - Returns: List of Critical & High CVEs
 
+POST `/license-scan`
+- Body: `{ "image": "<docker-image-name>" }`
+- Returns: List of unique SPDX license IDs found in the image
+
 ### Example
 ```sh
 curl -X POST http://localhost:8000/sbom -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
 curl -X POST http://localhost:8000/cve-scan -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
+curl -X POST http://localhost:8000/license-scan -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
 ```
