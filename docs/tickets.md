@@ -24,12 +24,12 @@
     - [x] Define scoring algorithm
     - [x] Integrate secrets/config hygiene checks
 
-- [ ] **Report Builder: PDF + JSON + signature**
+- [x] **Report Builder: PDF + JSON + signature**
   - Combine SBOM and scan results into HTML → PDF (WeasyPrint).
   - Sub-tasks:
-    - [ ] Generate HTML report
-    - [ ] Export PDF and JSON
-    - [ ] Add SHA-256 manifest + detached signature
+    - [x] Generate HTML report
+    - [x] Export PDF and JSON
+    - [x] Add SHA-256 manifest + detached signature
 
 - [ ] **UI: Simple React/Tailwind**
   - Image name input, progress bar, download link.

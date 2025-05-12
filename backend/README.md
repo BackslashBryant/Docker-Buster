@@ -6,7 +6,7 @@
 
 1. Install requirements:
    ```sh
-   pip install -r requirements.txt
+   pip install --user -r requirements.txt
    ```
 2. Ensure [Syft](https://github.com/anchore/syft) and [Grype](https://github.com/anchore/grype) are installed and available in your PATH.
 
@@ -34,10 +34,11 @@ POST `/risk-score`
 - Body: `{ "image": "<docker-image-name>" }`
 - Returns: Weighted risk score, CVE counts, and secrets detection
 
+POST `/report`
+- Body: `{ "image": "<docker-image-name>" }`
+- Returns: Manifest SHA-256, signature, and risk score (PDF/JSON files generated in temp dir for demo)
+
 ### Example
 ```sh
-curl -X POST http://localhost:8000/sbom -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
-curl -X POST http://localhost:8000/cve-scan -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
-curl -X POST http://localhost:8000/license-scan -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
-curl -X POST http://localhost:8000/risk-score -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
+curl -X POST http://localhost:8000/report -H "Content-Type: application/json" -d '{"image": "alpine:latest"}'
 ```
