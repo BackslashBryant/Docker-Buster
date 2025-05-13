@@ -76,6 +76,20 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 240, 240, 240;
+  --background-end-rgb: 255, 255, 255;
+  
+  /* Docker Buster color palette */
+  --db-shield-blue: #001B3A;     /* Dark shield background */
+  --db-navy: #041E37;            /* Slightly lighter navy for gradients */
+  --db-docker-blue: #0F95D6;     /* Docker blue from logo */
+  --db-circuit-blue: #1899D5;    /* Circuit line blue */
+  --db-lightning-red: #E53935;   /* Lightning bolt red */
+  --db-text-light: #F9FAFB;
+  --db-text-medium: #D1D5DB;
+  --db-card-bg: #071F35;         /* Slightly lighter than shield for cards */
+  --db-card-highlight: #102C45;  
 }
 
 .dark {
@@ -110,6 +124,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 30, 30, 30;
 }
 
 @layer base {
@@ -118,5 +135,213 @@
   }
   body {
     @apply bg-background text-foreground;
+    color: rgb(var(--foreground-rgb));
   }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+/* Docker Buster specific animations */
+@keyframes scan {
+  0% { transform: translateY(-100%); opacity: 0.7; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.animate-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-scan::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, transparent, var(--db-docker-blue), transparent);
+  animation: scan 1.5s ease-in-out infinite;
+}
+
+/* Lightning flash animation */
+@keyframes lightning {
+  0%, 100% { opacity: 0.3; filter: drop-shadow(0 0 5px rgba(229, 57, 53, 0)); }
+  3%, 10% { opacity: 1; filter: drop-shadow(0 0 10px rgba(229, 57, 53, 0.7)); }
+  20%, 80% { opacity: 0.3; filter: drop-shadow(0 0 5px rgba(229, 57, 53, 0)); }
+  83%, 90% { opacity: 1; filter: drop-shadow(0 0 10px rgba(229, 57, 53, 0.7)); }
+}
+
+.lightning-effect {
+  animation: lightning 5s infinite;
+}
+
+/* Pulse glow animation for security indicators */
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(15, 149, 214, 0.3)); }
+  50% { filter: drop-shadow(0 0 8px rgba(15, 149, 214, 0.7)); }
+}
+
+.security-indicator {
+  animation: glowPulse 2s infinite;
+}
+
+/* Progress bar animation */
+@keyframes progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.animated-progress .progress-bar {
+  animation: progress 30s linear;
+}
+
+/* Circuit pattern */
+.circuit-pattern {
+  background-color: var(--db-shield-blue);
+  background-image: 
+    radial-gradient(circle at 25px 25px, var(--db-circuit-blue) 2px, transparent 0),
+    linear-gradient(to right, transparent 20px, var(--db-circuit-blue) 20px, var(--db-circuit-blue) 21px, transparent 21px),
+    linear-gradient(to bottom, transparent 20px, var(--db-circuit-blue) 20px, var(--db-circuit-blue) 21px, transparent 21px);
+  background-size: 50px 50px;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* Shield shape styling */
+.shield-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px 16px 16px 16px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.shield-card::before {
+  content: '';
+  position: absolute;
+  left: -10%;
+  top: -60%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(to bottom right, transparent, rgba(15, 149, 214, 0.05), transparent);
+  transform: rotate(25deg);
+  pointer-events: none;
+}
+
+/* Other custom styles */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 30, 30, 30;
+  }
+}
+
+/* Form elements focus */
+input:focus, button:focus {
+  outline: 2px solid var(--db-docker-blue);
+  outline-offset: 2px;
+}
+
+/* Docker Buster utility classes */
+.db-card {
+  background-color: var(--db-card-bg);
+  border-radius: 8px;
+  border: 1px solid rgba(15, 149, 214, 0.1);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.db-card-highlight {
+  background-color: var(--db-card-highlight);
+}
+
+.db-gradient-bg {
+  background: linear-gradient(to bottom, var(--db-shield-blue), var(--db-navy));
+}
+
+.db-text-glow {
+  text-shadow: 0 0 10px rgba(15, 149, 214, 0.5);
+}
+
+.db-border-highlight {
+  border: 1px solid rgba(15, 149, 214, 0.3);
+}
+
+.lightning-border::after {
+  content: '';
+  position: absolute;
+  top: 15%;
+  right: -10px;
+  height: 70%;
+  width: 2px;
+  background: var(--db-lightning-red);
+  transform: rotate(15deg);
+  box-shadow: 0 0 8px rgba(229, 57, 53, 0.7);
+}
+
+/* Button styles */
+.db-button {
+  background-color: var(--db-docker-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.db-button:hover {
+  background-color: #1EAAE9;
+  box-shadow: 0 0 15px rgba(15, 149, 214, 0.5);
+}
+
+.db-button-danger {
+  background-color: var(--db-lightning-red);
+}
+
+.db-button-danger:hover {
+  background-color: #F44336;
+  box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
+}
+
+.db-glass-effect {
+  backdrop-filter: blur(12px);
+  background: rgba(7, 31, 53, 0.7);
+}
+
+.drop-shadow-glow {
+  filter: drop-shadow(0 0 8px rgba(15, 149, 214, 0.6));
 }
