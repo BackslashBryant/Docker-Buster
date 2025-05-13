@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2048" height="2048" viewBox="0 0 2048 2048"
+     xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <defs>
+    <!-- Shield glow -->
+    <radialGradient id="shieldGrad" cx="0.5" cy="0.4" r="0.6">
+      <stop offset="0%" stop-color="#152238"/>
+      <stop offset="100%" stop-color="#0a101b"/>
+    </radialGradient>
+
+    <!-- Container gradient -->
+    <linearGradient id="contGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#19a7ff"/>
+      <stop offset="100%" stop-color="#0072c3"/>
+    </linearGradient>
+
+    <!-- Lightning gradient -->
+    <linearGradient id="boltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff512f"/>
+      <stop offset="100%" stop-color="#ff004d"/>
+    </linearGradient>
+
+    <!-- Outer glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="22" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- SHIELD -->
+  <path d="M1024 150 1700 450 V1150 Q1024 1850 348 1150 V450 Z"
+        fill="url(#shieldGrad)" filter="url(#glow)"/>
+
+  <!-- CONTAINER (cracked) -->
+  <g transform="translate(700 700) scale(1.2)">
+    <rect x="0" y="0" width="400" height="200" rx="8" fill="url(#contGrad)"/>
+    <!-- ribs -->
+    <g fill="#0a101b">
+      <rect x="50" y="0" width="20" height="200"/>
+      <rect x="120" y="0" width="20" height="200"/>
+      <rect x="190" y="0" width="20" height="200"/>
+      <rect x="260" y="0" width="20" height="200"/>
+    </g>
+    <!-- crack -->
+    <polyline points="320,20 260,120 340,140 270,200" fill="#0a101b"/>
+  </g>
+
+  <!-- LIGHTNING -->
+  <polygon points="1280,320 1080,880 1350,720 1180,1350 1550,780 1300,880"
+           fill="url(#boltGrad)" filter="url(#glow)"/>
+
+  <!-- CIRCUIT + BINARIES -->
+  <g stroke="#19a7ff" stroke-width="24" stroke-linecap="round" fill="none">
+    <line x1="780" y1="930" x2="780" y2="1130"/>
+    <circle cx="780" cy="1190" r="32" fill="#19a7ff" stroke="none"/>
+    <line x1="1024" y1="930" x2="1024" y2="1250"/>
+    <circle cx="1024" cy="1310" r="32" fill="#19a7ff" stroke="none"/>
+    <line x1="1268" y1="930" x2="1268" y2="1130"/>
+    <circle cx="1268" cy="1190" r="32" fill="#19a7ff" stroke="none"/>
+  </g>
+
+  <!-- LOGOTYPE -->
+  <text x="1024" y="1700" font-family="Verdana, Arial, sans-serif"
+        font-size="220" text-anchor="middle" fill="#19a7ff" letter-spacing="20">
+    DOCKER
+  </text>
+  <text x="1024" y="1900" font-family="Verdana, Arial, sans-serif"
+        font-size="220" text-anchor="middle" fill="#ff004d" letter-spacing="20">
+    BUSTER
+  </text>
+</svg>

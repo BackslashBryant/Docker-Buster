@@ -112,6 +112,8 @@ def generate_report(req: ReportRequest):
         raise HTTPException(status_code=500, detail=f"Error processing input: {str(e)}")
 
 def process_docker_image(image, report_dir, report_id):
+    # Suppress GLib-GIO-WARNING logs
+    os.environ["G_MESSAGES_DEBUG"] = "none"
     # 1. Generate SBOM
     syft_result = subprocess.run(
         ["syft", image, "-o", "cyclonedx-json"],
@@ -133,6 +135,8 @@ def process_docker_image(image, report_dir, report_id):
         sev = m["vulnerability"]["severity"]
         if sev in cve_counts:
             cve_counts[sev] += 1
+            
+    # Calculate total CVE count
     cve_count = sum(cve_counts.values())
     
     # Check for license issues
@@ -150,7 +154,7 @@ def process_docker_image(image, report_dir, report_id):
         for prop in envs:
             if prop.get("name", "").upper() in ["AWS_SECRET_ACCESS_KEY", "SECRET_KEY", "API_KEY"]:
                 secrets_found = True
-    
+                
     score = (
         cve_counts["Critical"] * 5 +
         cve_counts["High"] * 3 +
@@ -159,92 +163,104 @@ def process_docker_image(image, report_dir, report_id):
         (license_violations * 2) +
         (10 if secrets_found else 0)
     )
+    # Cap score at 10
     score = min(10, score)
+    risk_level = "CRITICAL" if score > 7 else "MODERATE" if score > 3 else "LOW"
+    
+    # Image metadata (from SBOM or Grype source)
+    image_meta = {
+        "name": image,
+        "digest": None,
+        "size": None,
+        "os": None,
+        "architecture": None
+    }
+    source = grype_output.get("source", {})
+    if source.get("type") == "image":
+        target = source.get("target", {})
+        image_meta["digest"] = target.get("imageID")
+        image_meta["size"] = target.get("imageSize")
+        image_meta["os"] = target.get("os")
+        image_meta["architecture"] = target.get("architecture")
 
-    # --- New: Build components list with vulnerabilities ---
-    components = []
-    for comp in sbom.get("components", []):
-        comp_name = comp.get("name")
-        comp_version = comp.get("version")
-        comp_type = comp.get("type")
-        comp_origin = comp.get("purl", "")
-        comp_licenses = [lic.get("expression", "") for lic in comp.get("licenses", [])]
-        comp_maintainer = comp.get("supplier", {}).get("name", "")
-        # Find vulnerabilities for this component
-        vulns = []
-        for m in matches:
-            art = m.get("artifact", {})
-            vuln = m.get("vulnerability", {})
-            if art.get("name") == comp_name and art.get("version") == comp_version:
-                vulns.append({
-                    "id": vuln.get("id"),
-                    "severity": vuln.get("severity"),
-                    "description": vuln.get("description", ""),
-                    "fix_version": vuln.get("fix", {}).get("versions", [None])[0],
-                    "source": vuln.get("dataSource", "")
-                })
-        components.append({
-            "name": comp_name,
-            "version": comp_version,
-            "type": comp_type,
-            "origin": comp_origin,
-            "maintainer": comp_maintainer,
-            "licenses": comp_licenses,
-            "vulnerabilities": vulns
-        })
-
-    # --- New: Mock actionable insights ---
-    remediation_steps = [
-        "Update vulnerable packages to their latest versions.",
-        "Review and address license compliance issues.",
-        "Implement proper secrets management.",
-        "Consider using minimal base images.",
-        "Regularly scan your containers for new vulnerabilities."
-    ]
-    upgrade_recommendations = [
-        {"component": "openssl", "current": "1.1.1k", "recommended": "1.1.1u", "reason": "Fixes CVE-2023-1234"},
-        {"component": "log4j", "current": "2.14.1", "recommended": "2.17.1", "reason": "Mitigates Log4Shell"}
-    ]
-    config_suggestions = [
-        {"title": "Use a specific version tag instead of 'latest'", "code": "FROM alpine:3.15"},
-        {"title": "Run as non-root user", "code": "RUN addgroup -S appgroup && adduser -S appuser -G appgroup\nUSER appuser"}
-    ]
-    best_practices = [
-        "Use multi-stage builds to reduce image size and attack surface.",
-        "Avoid running containers as root when possible.",
-        "Never hardcode secrets in Dockerfiles.",
-        "Keep your base images updated with security patches.",
-        "Implement image signing for supply chain security."
-    ]
-
-    # --- New: Executive summary ---
+    # Executive summary
     executive_summary = {
-        "risk_score": score,
-        "cve_counts": cve_counts,
+        "risk_score": round(score, 1),
+        "risk_level": risk_level,
         "cve_count": cve_count,
+        "cve_counts": cve_counts,
         "license_violations": license_violations,
         "secrets_found": secrets_found,
-        "image": image
+        "components_count": len(sbom.get("components", []))
     }
 
-    # --- New: Bundle ---
+    # Components with vulnerabilities
+    components = []
+    comp_index = {c.get("name", ""): c for c in sbom.get("components", [])}
+    for comp in sbom.get("components", []):
+        comp_vulns = []
+        for m in matches:
+            if m["artifact"]["name"] == comp.get("name"):
+                vuln = m["vulnerability"]
+                comp_vulns.append({
+                    "id": vuln.get("id"),
+                    "severity": vuln.get("severity"),
+                    "description": vuln.get("description"),
+                    "fix_version": vuln.get("fix", {}).get("versions", [None])[0] if vuln.get("fix", {}).get("versions") else None,
+                    "references": vuln.get("references", [])
+                })
+        components.append({
+            "name": comp.get("name"),
+            "version": comp.get("version"),
+            "type": comp.get("type"),
+            "origin": comp.get("purl"),
+            "maintainer": comp.get("supplier", {}).get("name") if comp.get("supplier") else None,
+            "licenses": [l.get("expression") for l in comp.get("licenses", [])],
+            "vulnerabilities": comp_vulns
+        })
+
+    # Remediation (mock/static for now)
+    remediation = {
+        "steps": [
+            "Update vulnerable packages to their latest versions",
+            "Review and resolve license compliance issues",
+            "Implement proper secrets management practices",
+            "Consider using minimal base images",
+            "Regularly scan your containers for new vulnerabilities"
+        ],
+        "upgrade_recommendations": [
+            {
+                "component": m["artifact"]["name"],
+                "current_version": m["artifact"]["version"],
+                "recommended_version": "Latest",
+                "priority": "High" if m["vulnerability"]["severity"] in ["Critical", "High"] else "Medium"
+            }
+            for m in matches[:3] if m["vulnerability"]["severity"] in ["Critical", "High"]
+        ],
+        "config_suggestions": [
+            "Avoid running containers as root",
+            "Use multi-stage builds to reduce image size"
+        ],
+        "best_practices": [
+            "Never hardcode secrets in Dockerfiles or environment variables",
+            "Keep your base images updated",
+            "Implement image signing for supply chain security"
+        ]
+    }
+
+    # Prepare final bundle
     bundle = {
+        "report_id": report_id,
+        "api_version": "1.0",
+        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "image": image_meta,
         "executive_summary": executive_summary,
         "components": components,
-        "remediation_steps": remediation_steps,
-        "upgrade_recommendations": upgrade_recommendations,
-        "config_suggestions": config_suggestions,
-        "best_practices": best_practices,
-        "sbom": sbom,
-        "cve_scan": grype_output
+        "remediation": remediation
     }
 
-    json_path = os.path.join(report_dir, "report.json")
-    pdf_path = os.path.join(report_dir, "report.pdf")
-    manifest_path = os.path.join(report_dir, "manifest.sha256")
-    sig_path = os.path.join(report_dir, "manifest.sig")
-
     # Write JSON
+    json_path = os.path.join(report_dir, "report.json")
     with open(json_path, "w") as f:
         json.dump(bundle, f, indent=2)
         
@@ -480,11 +496,7 @@ def process_docker_image(image, report_dir, report_id):
                 <div class="executive-summary">
                     <div class="score-card">
                         <div class="score-circle">{score:.1f}</div>
-                        <div class="score-label">{
-                            'CRITICAL RISK' if score > 7 else 
-                            'MODERATE RISK' if score > 3 else 
-                            'LOW RISK'
-                        }</div>
+                        <div class="score-label">{risk_level}</div>
                     </div>
                     
                     <div class="metrics-grid">
@@ -650,7 +662,12 @@ def process_docker_image(image, report_dir, report_id):
     </body>
     </html>
     """
-    HTML(string=html).write_pdf(pdf_path)
+    pdf_path = os.path.join(report_dir, "report.pdf")
+    # Add headless mode for WeasyPrint if available
+    weasyprint_kwargs = {}
+    if os.environ.get("WEASYPRINT_HEADLESS", "false").lower() == "true":
+        weasyprint_kwargs["presentational_hints"] = True  # No real headless mode, but placeholder for future
+    HTML(string=html).write_pdf(pdf_path, **weasyprint_kwargs)
     
     # 6. SHA-256 manifest
     sha256 = hashlib.sha256()
@@ -658,7 +675,7 @@ def process_docker_image(image, report_dir, report_id):
         with open(path, "rb") as f:
             sha256.update(f.read())
     manifest = sha256.hexdigest()
-    with open(manifest_path, "w") as f:
+    with open(os.path.join(report_dir, "manifest.sha256"), "w") as f:
         f.write(manifest)
         
     # 7. Detached signature (generate ephemeral key for demo)
@@ -672,18 +689,13 @@ def process_docker_image(image, report_dir, report_id):
         padding.PKCS1v15(),
         hashes.SHA256()
     )
-    with open(sig_path, "wb") as f:
+    with open(os.path.join(report_dir, "manifest.sig"), "wb") as f:
         f.write(signature)
         
     # 8. Return files as download links
-    return {
-        "report_id": report_id,
-        "risk_score": round(score, 1),
-        "cve_count": cve_count,
-        "license_violations": license_violations,
-        "manifest_sha256": manifest,
-        "signature": signature.hex()
-    }
+    bundle["manifest_sha256"] = manifest
+    bundle["signature"] = signature.hex()
+    return bundle
 
 @app.get("/download/report/{report_id}")
 def download_report(report_id: str):
@@ -698,3 +710,32 @@ def download_json(report_id: str):
     if not os.path.exists(json_path):
         raise HTTPException(status_code=404, detail="Report JSON not found")
     return FileResponse(json_path, filename=f"docker-buster-report-{report_id}.json")
+
+@app.get("/report/{report_id}/status")
+def get_report_status(report_id: str):
+    """
+    Check the status of a report generation process.
+    Returns whether all the necessary files have been generated.
+    """
+    report_dir = os.path.join(REPORTS_DIR, report_id)
+    if not os.path.exists(report_dir):
+        raise HTTPException(status_code=404, detail="Report not found")
+        
+    json_path = os.path.join(report_dir, "report.json")
+    pdf_path = os.path.join(report_dir, "report.pdf")
+    manifest_path = os.path.join(report_dir, "manifest.sha256")
+    sig_path = os.path.join(report_dir, "manifest.sig")
+    
+    # Check if all output files exist
+    files_ready = all(os.path.exists(p) for p in [json_path, pdf_path, manifest_path, sig_path])
+    
+    return {
+        "report_id": report_id,
+        "status": "ready" if files_ready else "processing",
+        "files": {
+            "json": os.path.exists(json_path),
+            "pdf": os.path.exists(pdf_path),
+            "manifest": os.path.exists(manifest_path),
+            "signature": os.path.exists(sig_path)
+        }
+    }

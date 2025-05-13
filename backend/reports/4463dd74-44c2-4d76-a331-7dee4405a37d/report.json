@@ -1,0 +1,1004 @@
+{
+  "report_id": "4463dd74-44c2-4d76-a331-7dee4405a37d",
+  "api_version": "1.0",
+  "generated_at": "2025-05-13T19:05:03.245454Z",
+  "image": {
+    "name": "docker.io/library/alpine:latest",
+    "digest": "sha256:aded1e1a5b3705116fa0a92ba074a5e0b0031647d9c315983ccba2ee5428ec8b",
+    "size": 7829416,
+    "os": "linux",
+    "architecture": "amd64"
+  },
+  "executive_summary": {
+    "risk_score": 3.0,
+    "risk_level": "LOW",
+    "cve_count": 6,
+    "cve_counts": {
+      "Critical": 0,
+      "High": 0,
+      "Medium": 0,
+      "Low": 6
+    },
+    "license_violations": 0,
+    "secrets_found": false,
+    "components_count": 98
+  },
+  "components": [
+    {
+      "name": "alpine-baselayout",
+      "version": "3.6.8-r1",
+      "type": "library",
+      "origin": "pkg:apk/alpine/alpine-baselayout@3.6.8-r1?arch=x86_64&distro=alpine-3.21.3",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "alpine-baselayout-data",
+      "version": "3.6.8-r1",
+      "type": "library",
+      "origin": "pkg:apk/alpine/alpine-baselayout-data@3.6.8-r1?arch=x86_64&distro=alpine-3.21.3&upstream=alpine-baselayout",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "alpine-keys",
+      "version": "2.5-r0",
+      "type": "library",
+      "origin": "pkg:apk/alpine/alpine-keys@2.5-r0?arch=x86_64&distro=alpine-3.21.3",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "alpine-release",
+      "version": "3.21.3-r0",
+      "type": "library",
+      "origin": "pkg:apk/alpine/alpine-release@3.21.3-r0?arch=x86_64&distro=alpine-3.21.3&upstream=alpine-base",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "apk-tools",
+      "version": "2.14.6-r3",
+      "type": "library",
+      "origin": "pkg:apk/alpine/apk-tools@2.14.6-r3?arch=x86_64&distro=alpine-3.21.3",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "busybox",
+      "version": "1.37.0-r12",
+      "type": "library",
+      "origin": "pkg:apk/alpine/busybox@1.37.0-r12?arch=x86_64&distro=alpine-3.21.3",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": [
+        {
+          "id": "CVE-2024-58251",
+          "severity": "Low",
+          "description": "In netstat in BusyBox through 1.37.0, local users can launch of network application with an argv[0] containing an ANSI terminal escape sequence, leading to a denial of service (terminal locked up) when netstat is used by a victim.",
+          "fix_version": null,
+          "references": []
+        },
+        {
+          "id": "CVE-2025-46394",
+          "severity": "Low",
+          "description": "In tar in BusyBox through 1.37.0, a TAR archive can have filenames hidden from a listing through the use of terminal escape sequences.",
+          "fix_version": null,
+          "references": []
+        }
+      ]
+    },
+    {
+      "name": "busybox-binsh",
+      "version": "1.37.0-r12",
+      "type": "library",
+      "origin": "pkg:apk/alpine/busybox-binsh@1.37.0-r12?arch=x86_64&distro=alpine-3.21.3&upstream=busybox",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": [
+        {
+          "id": "CVE-2024-58251",
+          "severity": "Low",
+          "description": "In netstat in BusyBox through 1.37.0, local users can launch of network application with an argv[0] containing an ANSI terminal escape sequence, leading to a denial of service (terminal locked up) when netstat is used by a victim.",
+          "fix_version": null,
+          "references": []
+        },
+        {
+          "id": "CVE-2025-46394",
+          "severity": "Low",
+          "description": "In tar in BusyBox through 1.37.0, a TAR archive can have filenames hidden from a listing through the use of terminal escape sequences.",
+          "fix_version": null,
+          "references": []
+        }
+      ]
+    },
+    {
+      "name": "ca-certificates-bundle",
+      "version": "20241121-r1",
+      "type": "library",
+      "origin": "pkg:apk/alpine/ca-certificates-bundle@20241121-r1?arch=x86_64&distro=alpine-3.21.3&upstream=ca-certificates",
+      "maintainer": null,
+      "licenses": [
+        "MPL-2.0 AND MIT"
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "libcrypto3",
+      "version": "3.3.3-r0",
+      "type": "library",
+      "origin": "pkg:apk/alpine/libcrypto3@3.3.3-r0?arch=x86_64&distro=alpine-3.21.3&upstream=openssl",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "libssl3",
+      "version": "3.3.3-r0",
+      "type": "library",
+      "origin": "pkg:apk/alpine/libssl3@3.3.3-r0?arch=x86_64&distro=alpine-3.21.3&upstream=openssl",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "musl",
+      "version": "1.2.5-r9",
+      "type": "library",
+      "origin": "pkg:apk/alpine/musl@1.2.5-r9?arch=x86_64&distro=alpine-3.21.3",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "musl-utils",
+      "version": "1.2.5-r9",
+      "type": "library",
+      "origin": "pkg:apk/alpine/musl-utils@1.2.5-r9?arch=x86_64&distro=alpine-3.21.3&upstream=musl",
+      "maintainer": null,
+      "licenses": [
+        "MIT AND BSD-2-Clause AND GPL-2.0-or-later"
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "scanelf",
+      "version": "1.3.8-r1",
+      "type": "library",
+      "origin": "pkg:apk/alpine/scanelf@1.3.8-r1?arch=x86_64&distro=alpine-3.21.3&upstream=pax-utils",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "ssl_client",
+      "version": "1.37.0-r12",
+      "type": "library",
+      "origin": "pkg:apk/alpine/ssl_client@1.37.0-r12?arch=x86_64&distro=alpine-3.21.3&upstream=busybox",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": [
+        {
+          "id": "CVE-2024-58251",
+          "severity": "Low",
+          "description": "In netstat in BusyBox through 1.37.0, local users can launch of network application with an argv[0] containing an ANSI terminal escape sequence, leading to a denial of service (terminal locked up) when netstat is used by a victim.",
+          "fix_version": null,
+          "references": []
+        },
+        {
+          "id": "CVE-2025-46394",
+          "severity": "Low",
+          "description": "In tar in BusyBox through 1.37.0, a TAR archive can have filenames hidden from a listing through the use of terminal escape sequences.",
+          "fix_version": null,
+          "references": []
+        }
+      ]
+    },
+    {
+      "name": "zlib",
+      "version": "1.3.1-r2",
+      "type": "library",
+      "origin": "pkg:apk/alpine/zlib@1.3.1-r2?arch=x86_64&distro=alpine-3.21.3",
+      "maintainer": null,
+      "licenses": [
+        null
+      ],
+      "vulnerabilities": []
+    },
+    {
+      "name": "alpine",
+      "version": "3.21.3",
+      "type": "operating-system",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/bin/busybox",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/alpine-release",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/apk/keys/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/apk/keys/alpine-devel@lists.alpinelinux.org-5243ef4b.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/apk/keys/alpine-devel@lists.alpinelinux.org-5261cecb.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/apk/keys/alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/apk/keys/alpine-devel@lists.alpinelinux.org-61666e3f.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/busybox-paths.d/busybox",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/crontabs/root",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/fstab",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/group",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/hostname",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/hosts",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/inittab",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/issue",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/logrotate.d/acpid",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/modprobe.d/aliases.conf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/modprobe.d/blacklist.conf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/modprobe.d/i386.conf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/modprobe.d/kms.conf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/modules",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/motd",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/network/if-up.d/dad",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/nsswitch.conf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/passwd",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/profile",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/profile.d/20locale.sh",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/profile.d/README",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/profile.d/color_prompt.sh.disabled",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/protocols",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/secfixes.d/alpine",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/securetty",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/services",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/shadow",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/shells",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/ssl/certs/ca-certificates.crt",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/ssl/ct_log_list.cnf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/ssl/ct_log_list.cnf.dist",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/ssl/openssl.cnf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/ssl/openssl.cnf.dist",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/sysctl.conf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/etc/udhcpc/udhcpc.conf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/lib/apk/db/installed",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/lib/ld-musl-x86_64.so.1",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/sbin/apk",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/sbin/ldconfig",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/bin/getconf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/bin/getent",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/bin/iconv",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/bin/ldd",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/bin/scanelf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/bin/ssl_client",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/engines-3/afalg.so",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/engines-3/capi.so",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/engines-3/loader_attic.so",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/engines-3/padlock.so",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/libapk.so.2.14.0",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/libcrypto.so.3",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/libssl.so.3",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/libz.so.1.3.1",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/os-release",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/ossl-modules/legacy.so",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/lib/sysctl.d/00-alpine.conf",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5243ef4b.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-524d27bb.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5261cecb.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58199dcc.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58cbb476.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58e4f17d.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5e69ca50.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-60ac2099.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-61666e3f.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616a9724.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616abc23.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616ac3bc.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616adfeb.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616ae350.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616db30d.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-66ba20fe.rsa.pub",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    },
+    {
+      "name": "/usr/share/udhcpc/default.script",
+      "version": null,
+      "type": "file",
+      "origin": null,
+      "maintainer": null,
+      "licenses": [],
+      "vulnerabilities": []
+    }
+  ],
+  "remediation": {
+    "steps": [
+      "Update vulnerable packages to their latest versions",
+      "Review and resolve license compliance issues",
+      "Implement proper secrets management practices",
+      "Consider using minimal base images",
+      "Regularly scan your containers for new vulnerabilities"
+    ],
+    "upgrade_recommendations": [],
+    "config_suggestions": [
+      "Avoid running containers as root",
+      "Use multi-stage builds to reduce image size"
+    ],
+    "best_practices": [
+      "Never hardcode secrets in Dockerfiles or environment variables",
+      "Keep your base images updated",
+      "Implement image signing for supply chain security"
+    ]
+  }
+}
