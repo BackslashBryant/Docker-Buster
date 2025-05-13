@@ -135,3 +135,4 @@
   - [ ] History/tracking of previously scanned images
   - [ ] Integration with vulnerability databases
   - [ ] Create Docker Compose setup for one-command deployment
+  - [ ] Integrate authoritative security best practices/config snippets from open source or official sources (e.g., OWASP, Docker docs, CIS Benchmarks)

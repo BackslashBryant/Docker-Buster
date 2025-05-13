@@ -121,6 +121,36 @@ export default function Home() {
     },
   ];
 
+  // Add mock data for actionable insights
+  const remediationSteps = [
+    "Update vulnerable packages to their latest versions.",
+    "Review and address license compliance issues.",
+    "Implement proper secrets management.",
+    "Consider using minimal base images.",
+    "Regularly scan your containers for new vulnerabilities."
+  ];
+  const upgradeRecommendations = [
+    { component: "openssl", current: "1.1.1k", recommended: "1.1.1u", reason: "Fixes CVE-2023-1234" },
+    { component: "log4j", current: "2.14.1", recommended: "2.17.1", reason: "Mitigates Log4Shell" }
+  ];
+  const configSuggestions = [
+    {
+      title: "Use a specific version tag instead of 'latest'",
+      code: "FROM alpine:3.15"
+    },
+    {
+      title: "Run as non-root user",
+      code: "RUN addgroup -S appgroup && adduser -S appuser -G appgroup\nUSER appuser"
+    }
+  ];
+  const bestPractices = [
+    "Use multi-stage builds to reduce image size and attack surface.",
+    "Avoid running containers as root when possible.",
+    "Never hardcode secrets in Dockerfiles.",
+    "Keep your base images updated with security patches.",
+    "Implement image signing for supply chain security."
+  ];
+
   return (
     <div className="min-h-screen p-4 sm:p-8">
       <div className="max-w-5xl mx-auto">
@@ -480,42 +510,48 @@ export default function Home() {
                       <div className="bg-db-card-highlight p-4 rounded-lg mb-6">
                         <h3 className="text-sm font-medium text-db-text-light mb-2">Remediation Priority</h3>
                         <ol className="list-decimal pl-5 text-sm text-db-text-light space-y-2">
-                          <li>Update vulnerable packages to their latest versions</li>
-                          <li>Review and address license compliance issues</li>
-                          <li>Implement proper secrets management</li>
-                          <li>Consider using minimal base images</li>
-                          <li>Regularly scan your containers for new vulnerabilities</li>
+                          {remediationSteps.map((step, idx) => (
+                            <li key={idx}>{step}</li>
+                          ))}
                         </ol>
                       </div>
 
                       <div className="bg-db-card-highlight p-4 rounded-lg mb-6">
-                        <h3 className="text-sm font-medium text-db-text-light mb-2">Security Best Practices</h3>
-                        <ul className="list-disc pl-5 text-sm text-db-text-light space-y-2">
-                          <li>Use multi-stage builds to reduce image size and attack surface</li>
-                          <li>Avoid running containers as root when possible</li>
-                          <li>Never hardcode secrets in Dockerfiles</li>
-                          <li>Keep your base images updated with security patches</li>
-                          <li>Implement image signing for supply chain security</li>
-                        </ul>
+                        <h3 className="text-sm font-medium text-db-text-light mb-2">Upgrade Recommendations</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {upgradeRecommendations.map((rec, idx) => (
+                            <div key={idx} className="db-card p-4 flex flex-col">
+                              <div className="mb-1 text-db-text-light font-bold">{rec.component}</div>
+                              <div className="text-xs text-db-text-medium mb-1">Current: <span className="font-mono">{rec.current}</span></div>
+                              <div className="text-xs text-green-500 mb-1">Recommended: <span className="font-mono">{rec.recommended}</span></div>
+                              <div className="text-xs text-db-text-medium">{rec.reason}</div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
 
                       <div className="bg-db-card-highlight p-4 rounded-lg mb-6">
-                        <h3 className="text-sm font-medium text-db-text-light mb-2">Configuration Example</h3>
-                        <pre className="bg-gray-800 text-xs p-3 rounded overflow-x-auto">
-{`# Use a specific version tag instead of 'latest'
-FROM alpine:3.15
+                        <h3 className="text-sm font-medium text-db-text-light mb-2">Configuration Suggestions</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {configSuggestions.map((cfg, idx) => (
+                            <div key={idx} className="db-card p-4">
+                              <div className="mb-2 text-db-text-light font-medium">{cfg.title}</div>
+                              <pre className="bg-gray-800 text-xs p-3 rounded overflow-x-auto text-db-text-light relative">
+                                <code>{cfg.code}</code>
+                                {/* Copy button could be added here */}
+                              </pre>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
 
-# Run as non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
-
-# Use multi-stage builds
-FROM build AS final
-COPY --from=build /app/binary /app/binary
-
-# Scan your image regularly
-# docker scan your-image-name`}
-                        </pre>
+                      <div>
+                        <h3 className="text-sm font-semibold text-db-docker-blue mb-2">Security Best Practices</h3>
+                        <ul className="list-disc pl-5 text-sm text-db-text-light space-y-2">
+                          {bestPractices.map((bp, idx) => (
+                            <li key={idx}>{bp}</li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   )}
