@@ -1,0 +1,86 @@
+📱 Screen 1: Welcome to IceBreaker
+Background Color: #2C3A59 (Deep Navy)
+
+Main Title: Centered, large font
+
+"Welcome to IceBreaker"
+
+Subtext/Body: Below the title, medium size
+
+"Real-world. Real-time. Real connections."
+
+Action: No button. Tap anywhere or swipe left to continue.
+
+Progress Indicator: 4 small circles at the bottom, first one filled (indicating 1/4).
+
+📱 Screen 2: What Makes IceBreaker Different
+Background Color: Same (#2C3A59)
+
+Main Title: Centered, large font
+
+"What Makes IceBreaker Different"
+
+Body Text (bullet style): Centered, medium font
+
+"✨ No endless swiping.
+✨ No clout chasing.
+✨ No digital ghosts.
+\nOnly real people. Only real moments."
+
+Action: Tap anywhere or swipe left to continue.
+
+Progress Indicator: 4 circles, second one filled (2/4).
+
+📱 Screen 3: Your Control. Your Safety.
+Background Color: Same (#2C3A59)
+
+Main Title: Centered, large font
+
+"Your Control. Your Safety."
+
+Body Text (bullet style): Centered, medium font
+
+"👁️ You control your visibility.
+🔒 Chats disappear when you leave.
+🚨 Panic button ready for emergencies."
+
+Action: Tap anywhere or swipe left to continue.
+
+Progress Indicator: 4 circles, third one filled (3/4).
+
+📱 Screen 4: Ready to Break the Ice?
+Background Color: Same (#2C3A59)
+
+Main Title: Centered, large font
+
+"Ready to Break the Ice?"
+
+Primary Button (Large, Centered):
+
+Text: Break the Ice
+
+Button Color: #4D84C3 (IceBreaker Blue)
+
+Text Color: #2C3A59 (deep navy, matching background for contrast)
+
+Rounded corners, medium bold text.
+
+Secondary Button (Underneath, Smaller Text Button):
+
+Text: Maybe Later
+
+No border, transparent background, muted text color (#BBCBE7).
+
+Progress Indicator: 4 circles, fourth one filled (4/4).
+
+📋 Quick Behavior Notes Across All Screens
+Swipe left or tap anywhere (except buttons) to advance.
+
+Progress Dots: Always visible at bottom (filled for active screen).
+
+Transition Style: Smooth horizontal swipe (no flashy animations).
+
+Fonts: Monospace / Retro Terminal Feel.
+
+Accessibility: High contrast, tappable elements big enough for thumbs.
+

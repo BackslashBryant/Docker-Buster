@@ -1,0 +1,155 @@
+📱 Main Radar Discovery Screen
+Background Color: #2C3A59 (Deep Navy)
+
+Top Section:
+
+Centered small Radar Pulse Animation (pulsing circle, optional low-opacity).
+
+Text underneath:
+
+"Scanning for nearby connections..."
+
+Dynamic User Cards (Stacked Vertically or Grid):
+
+Small, simple cards appear as users are detected.
+
+Each Card Displays:
+
+Random Username (e.g., PixelWolf12)
+
+List of Shared Interests (e.g., [Music, Tech, Hiking])
+
+Approximate Distance (e.g., “Within 50 meters” — NEVER exact address)
+
+"Connect" Button (primary action, tap to start ephemeral chat)
+
+"Report/Block" Icon (small, corner placed)
+
+Panic Button:
+
+Always fixed bottom right corner.
+
+Floating action button (FAB) style.
+
+Icon: 🚨 (emergency symbol)
+
+Color: Soft Orange (#EC9C38)
+
+📱 User Card Detail (Quick Match View)
+When tapping a user card:
+
+Modal or Overlay
+
+Contents:
+
+Random Username (bold, centered)
+
+Shared Interests (list or tag style)
+
+Match Score Indicator (Optional — "High Match", "Good Match")
+
+Actions:
+
+Connect Button: Centered, bold
+
+Report/Block Button: Small, lower in modal
+
+📱 Ephemeral Chat Screen (Terminal-Style)
+Background Color: #2C3A59 (Deep Navy)
+
+Header:
+
+Random Username Displayed (top center).
+
+“Connection will disappear when you leave proximity” (small subtext).
+
+Message Area:
+
+Terminal-style message bubbles (monospaced font).
+
+Soft "typewriter reveal" for new incoming messages (optional).
+
+Input Field:
+
+Monospaced typing area at bottom.
+
+Send Button (styled minimally).
+
+Panic Button:
+
+Still floating bottom right corner (persistent through app).
+
+Auto-Expire Behavior:
+
+System automatically clears the chat when users exit proximity.
+
+Message: "Connection Lost. Chat Deleted." (friendly pop-up)
+
+📱 Settings Screen
+Background Color: #2C3A59
+
+Top Section Title:
+
+"Settings"
+
+Menu List:
+
+Visibility Toggle:
+
+Label: "Appear in Nearby Scan" (Switch ON/OFF)
+
+ON = visible to others nearby; OFF = invisible.
+
+Manage Interests:
+
+Link to edit interest tags.
+
+Manage Emergency Contacts:
+
+Add/Edit/Delete emergency contacts.
+
+Log Out Button:
+
+Standard button at bottom.
+
+Navigation:
+
+Simple back arrow top left.
+
+📱 Panic Button Activation Flow
+When tapped:
+
+Immediate pop-up (Full-Screen Modal)
+
+Popup Content:
+
+Title:
+
+"Emergency Alert?"
+
+Subtext:
+
+"Sending your real-time location to your emergency contact."
+
+Two Buttons:
+
+Confirm Panic Alert (Red Button)
+
+Cancel (Muted button)
+
+Behavior After Confirm:
+
+Location sent.
+
+User gets a confirmation:
+
+"Help is on the way."
+
+🛠️ General Interaction Notes for All Main Screens
+
+Aspect	Behavior
+Swipe / Tap Behavior	Standard taps to open cards, swipe optional for chat scroll.
+Transitions	Smooth fades and slides (not aggressive, no jarring pop-ins).
+Consistency	Persistent Panic Button across all active screens.
+Accessibility	Large tap areas, high contrast, low animation density.
+Chat Expiration	Tied to real-time proximity monitoring.

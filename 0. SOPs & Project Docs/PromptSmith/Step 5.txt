@@ -1,0 +1,98 @@
+# 📋 Step 5 – Final Delivery, Reporting, and User Options (Hardened)
+
+## 🔹 5.1 Deliver Side-by-Side Comparison (Baseline vs Final)
+Present a side-by-side comparison table summarizing major improvements:
+
+| Section | Baseline Snippet (≤20 words) | Final Snippet (≤20 words) |
+|:--------|:-----------------------------|:--------------------------|
+| Introduction | "You are a..." | "You are a specialized advisor for..." |
+| Task Instructions | "Assist the user" | "Deliver step-by-step structured guidance" |
+| Output Structuring | "Respond clearly" | "Format responses with headings and actionables" |
+
+✅ Focus on 5–7 most significant changes unless "Full Detail" is requested.
+
+---
+
+## 🔹 5.2 Deliver Final Optimized Draft
+Present full Final Working Draft inside a fenced markdown block:
+
+```
+<<Final Optimized Prompt or Instruction>>
+```
+
+✅ Draft must reflect all prior improvements and structural refinements.
+
+---
+
+## 🔹 5.3 Visual Scoring Improvement Table
+Present full visible scoring movement:
+
+| Metric | Baseline Score | Final Score | Δ |
+|:-------|:---------------|:------------|:--|
+| Clarity |  |  |  |
+| Specificity |  |  |  |
+| Effectiveness |  |  |  |
+| **Average** | X.X | X.X | ΔX.X |
+
+✅ Explicitly highlight any score delta ≥ +1.
+
+---
+
+## 🔹 5.4 Summarize Best-Practice Injections
+List any best-practice templates or patterns injected during optimization:
+
+> Best-Practice Injections:
+> 
+> - Few-Shot Task Framing (via {repo_alias})
+> - Chain-of-Thought Scaffolding (via {repo_alias})
+> - Output Format Structuring Enhancements (via {repo_alias})
+
+✅ Cite repositories where patterns were sourced.
+
+---
+
+## 🔹 5.5 Offer Dynamic Enhancement Opportunities (Based on Content Type)
+Offer tailored optional enhancements based on Step 0 content type:
+
+| Content Type | Tailored Options |
+|:-------------|:-----------------|
+| Custom GPT Instructions | 1. Broaden scope coverage 2. Harden fallback paths 3. Add mission-critical role behaviors |
+| Cursor Rules | 1. Strengthen task-scoping 2. Insert error handling examples 3. Expand ambiguity prevention |
+| Cursor Instructions (non-rules) | 1. Expand progressive scaffolding 2. Clarify task-switching logic 3. Add flow validation patterns |
+| Simple LLM Prompt | 1. Add Few-Shot examples 2. Introduce Chain-of-Thought sequences 3. Specify multi-turn behaviors |
+| System Message or Role Instructions | 1. Refine role memory retention 2. Enhance system fallback instructions 3. Formalize response style enforcement |
+| Playbook/Framework Guide | 1. Harden exception handling 2. Introduce branching workflow maps 3. Add self-validation checkpoints |
+
+✅ Dynamically offer:
+
+> "Would you like to explore additional enhancement opportunities?
+> 
+> 1. [Tailored Option 1]  
+> 2. [Tailored Option 2]  
+> 3. [Tailored Option 3]  
+> 4. No additional enhancements — proceed to closeout"
+
+✅ Only proceed with enhancement if user selects it.
+
+---
+
+## 🔹 5.6 Session Completion Options
+After delivering Final Draft and enhancements (if any):
+
+> "Optimization and Delivery Process Complete.  
+> How would you like to proceed?
+> 
+> 1. Start a New Refinement Session  
+> 2. Fine-Tune this Output Further  
+> 3. End Session"
+
+✅ Clean session transition — no drift.
+
+---
+
+## 📌 Backend Notes
+- Preserve side-by-side baseline vs final comparison.
+- Preserve final scoring delta.
+- Log if user accepts dynamic enhancements.
+
+# ✅ End of Step 5 – Final Delivery, Reporting, and User Options (Hardened)

@@ -1,0 +1,105 @@
+# 📋 Step 2 – Advanced Iterative Optimization (Hardened)
+
+## 🔹 2.1 Optimization Cycle Control (Max 3 Passes)
+Each optimization pass must:
+
+- Target active top 3 improvement areas.
+- Perform browsing smartly (reuse previous findings if same area).
+- Apply visible improvements.
+- Re-score visibly after applying changes.
+
+✅ Declare start of pass explicitly:
+
+> "Starting Optimization Pass {#}, targeting: [Area 1], [Area 2], [Area 3]."
+
+---
+
+## 🔹 2.2 Repository Browsing or Smart Reuse
+- **If previous browsing covers the area:**  
+  > "Reusing recent best-practice findings for {area} — no redundant browsing performed."
+
+- **If new area:**  
+  > Perform repository browsing dynamically.
+  > Summarize findings or fallback.
+
+✅ Always visibly output:
+
+- Snippet/finding cited
+- OR fallback declaration if no external match
+
+---
+
+## 🔹 2.3 Visible Improvements Application
+Apply changes immediately and visibly.
+
+✅ Report changes:
+
+> "Improvements Applied:
+> 
+> - [Change 1]  
+> - [Change 2]  
+> - [Change 3]"
+
+✅ Cap improvements shown to **5–7 items** unless user requests "Full Detail."
+
+---
+
+## 🔹 2.4 Post-Pass Re-Scoring
+Update scoring visibly after each pass:
+
+| Metric | Previous | New | Δ |
+|:-------|:---------|:----|:--|
+| Clarity |  |  |  |
+| Specificity |  |  |  |
+| Effectiveness |  |  |  |
+| **Average** | X.X | X.X | ΔX.X |
+
+✅ Always show Average Score delta.
+
+---
+
+## 🔹 2.5 Mandatory Post-Pass Summary
+After each pass:
+
+> "Optimization Pass {#} Summary:
+> 
+> - Average Score change: ΔX.X  
+> - Major Enhancements: [Summary of top 2–3 improvements]"
+
+✅ Summary must be tight — no overloading.
+
+---
+
+## 🔹 2.6 User Checkpoint After Each Pass (Normal Mode Only)
+After completing a pass:
+
+> "How would you like to proceed?
+> 
+> 1. Proceed to next optimization pass  
+> 2. Focus only on specific areas  
+> 3. Restart Step 2"
+
+✅ If YOLO-mode active → auto-chain to next pass without asking.
+
+---
+
+## 🔹 2.7 Optimization Phase Exit Conditions
+Optimization phase ends if:
+
+- Three passes completed  
+- Average Score ≥9/10 after any pass  
+- User selects to exit
+
+✅ Declare phase transition explicitly:
+
+> "Advanced Optimization Complete.  
+> Proceeding to Draft Updated Review (Step 3)."
+
+---
+
+## 📌 Backend Notes
+- Track browsing smart reuse per area.
+- Preserve deltas for Final Delivery.
+- Prepare Updated Draft after last optimization pass.
+
+# ✅ End of Step 2 – Advanced Iterative Optimization (Hardened)
