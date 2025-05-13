@@ -7,6 +7,8 @@ import { CircularGauge } from "@/components/ui/gauge";
 import { SeverityChart, getDefaultSeverityData } from "@/components/ui/severity-chart";
 import { LicenseIndicator } from "@/components/ui/license-indicator";
 import { MetricCard } from "@/components/ui/metric-card";
+import { ExpandablePanel } from "@/components/ui/expandable-panel";
+import { getSeverityColor } from "@/lib/utils";
 
 interface ScanResult {
   report_id: string;
@@ -84,6 +86,40 @@ export default function Home() {
       </div>
     </div>
   );
+
+  // Add mock data for demonstration
+  const mockComponents = [
+    {
+      name: "openssl",
+      version: "1.1.1k",
+      severity: "Critical",
+      origin: "Alpine base image",
+      maintainer: "OpenSSL Project",
+      impact: "Remote code execution",
+      vector: "Network",
+      description: "A critical vulnerability allowing remote code execution via crafted packets.",
+    },
+    {
+      name: "log4j",
+      version: "2.14.1",
+      severity: "Critical",
+      origin: "App dependency",
+      maintainer: "Apache Foundation",
+      impact: "Remote injection (Log4Shell)",
+      vector: "Input data",
+      description: "Log4Shell allows attackers to inject code via log messages.",
+    },
+    {
+      name: "libxml2",
+      version: "2.9.10",
+      severity: "Medium",
+      origin: "Alpine base image",
+      maintainer: "GNOME Project",
+      impact: "Denial of service",
+      vector: "Malformed XML",
+      description: "Malformed XML can cause resource exhaustion.",
+    },
+  ];
 
   return (
     <div className="min-h-screen p-4 sm:p-8">
@@ -250,6 +286,55 @@ export default function Home() {
                         : 'No issues detected'}
                     </span>
                   </div>
+                </div>
+
+                {/* Component Details Section */}
+                <div className="mb-8">
+                  <h2 className="text-lg font-bold text-db-text-light mb-4">Component Details</h2>
+                  {/* Filter/Sort Controls */}
+                  <div className="flex flex-wrap gap-3 mb-4">
+                    <select className="bg-db-card-highlight text-db-text-light rounded px-2 py-1" defaultValue="all">
+                      <option value="all">All Severities</option>
+                      <option value="Critical">Critical</option>
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
+                    <select className="bg-db-card-highlight text-db-text-light rounded px-2 py-1" defaultValue="name">
+                      <option value="name">Sort by Name</option>
+                      <option value="severity">Sort by Severity</option>
+                    </select>
+                  </div>
+                  {/* Expandable Panels for Components */}
+                  {mockComponents.map((comp, idx) => (
+                    <ExpandablePanel
+                      key={idx}
+                      title={`${comp.name} (${comp.version})`}
+                      level={(() => {
+                        switch (comp.severity.toLowerCase()) {
+                          case 'critical': return 'critical';
+                          case 'high': return 'warning';
+                          case 'medium': return 'info';
+                          default: return 'none';
+                        }
+                      })()}
+                      badge={<span style={{ color: getSeverityColor(comp.severity), fontWeight: 700 }}>{comp.severity}</span>}
+                    >
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap gap-4 text-sm">
+                          <div><span className="font-medium text-db-text-light">Origin:</span> {comp.origin}</div>
+                          <div><span className="font-medium text-db-text-light">Maintainer:</span> {comp.maintainer}</div>
+                          <div><span className="font-medium text-db-text-light">Vector:</span> <span title={comp.vector}>{comp.vector}</span></div>
+                        </div>
+                        <div className="text-db-text-medium text-xs mt-2">
+                          <span className="font-medium text-db-text-light">Impact:</span> <span title={comp.impact}>{comp.impact}</span>
+                        </div>
+                        <div className="text-db-text-medium text-xs mt-2">
+                          <span className="font-medium text-db-text-light">Description:</span> {comp.description}
+                        </div>
+                      </div>
+                    </ExpandablePanel>
+                  ))}
                 </div>
 
                 {/* Tabbed Sections - Executive Summary, Component Details, Actionable Insights */}
