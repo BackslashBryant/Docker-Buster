@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "test:frontend": "npm --prefix frontend test",
+    "test:backend": "pytest backend/",
+    "test:all": "npm --prefix frontend test && pytest backend/"
+  }
+} 

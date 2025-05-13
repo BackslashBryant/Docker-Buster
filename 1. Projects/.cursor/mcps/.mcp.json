@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "github-issue": {
-      "type": "stdio",
-      "command": "npx mcp-github-issue@latest"
-    }
-  }
-} 
