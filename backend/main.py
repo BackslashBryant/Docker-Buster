@@ -133,8 +133,6 @@ def process_docker_image(image, report_dir, report_id):
         sev = m["vulnerability"]["severity"]
         if sev in cve_counts:
             cve_counts[sev] += 1
-            
-    # Calculate total CVE count
     cve_count = sum(cve_counts.values())
     
     # Check for license issues
@@ -152,7 +150,7 @@ def process_docker_image(image, report_dir, report_id):
         for prop in envs:
             if prop.get("name", "").upper() in ["AWS_SECRET_ACCESS_KEY", "SECRET_KEY", "API_KEY"]:
                 secrets_found = True
-                
+    
     score = (
         cve_counts["Critical"] * 5 +
         cve_counts["High"] * 3 +
@@ -161,13 +159,66 @@ def process_docker_image(image, report_dir, report_id):
         (license_violations * 2) +
         (10 if secrets_found else 0)
     )
-    # Cap score at 10
     score = min(10, score)
-    
-    # 4. Prepare JSON bundle
-    bundle = {
-        "sbom": sbom,
-        "cve_scan": grype_output,
+
+    # --- New: Build components list with vulnerabilities ---
+    components = []
+    for comp in sbom.get("components", []):
+        comp_name = comp.get("name")
+        comp_version = comp.get("version")
+        comp_type = comp.get("type")
+        comp_origin = comp.get("purl", "")
+        comp_licenses = [lic.get("expression", "") for lic in comp.get("licenses", [])]
+        comp_maintainer = comp.get("supplier", {}).get("name", "")
+        # Find vulnerabilities for this component
+        vulns = []
+        for m in matches:
+            art = m.get("artifact", {})
+            vuln = m.get("vulnerability", {})
+            if art.get("name") == comp_name and art.get("version") == comp_version:
+                vulns.append({
+                    "id": vuln.get("id"),
+                    "severity": vuln.get("severity"),
+                    "description": vuln.get("description", ""),
+                    "fix_version": vuln.get("fix", {}).get("versions", [None])[0],
+                    "source": vuln.get("dataSource", "")
+                })
+        components.append({
+            "name": comp_name,
+            "version": comp_version,
+            "type": comp_type,
+            "origin": comp_origin,
+            "maintainer": comp_maintainer,
+            "licenses": comp_licenses,
+            "vulnerabilities": vulns
+        })
+
+    # --- New: Mock actionable insights ---
+    remediation_steps = [
+        "Update vulnerable packages to their latest versions.",
+        "Review and address license compliance issues.",
+        "Implement proper secrets management.",
+        "Consider using minimal base images.",
+        "Regularly scan your containers for new vulnerabilities."
+    ]
+    upgrade_recommendations = [
+        {"component": "openssl", "current": "1.1.1k", "recommended": "1.1.1u", "reason": "Fixes CVE-2023-1234"},
+        {"component": "log4j", "current": "2.14.1", "recommended": "2.17.1", "reason": "Mitigates Log4Shell"}
+    ]
+    config_suggestions = [
+        {"title": "Use a specific version tag instead of 'latest'", "code": "FROM alpine:3.15"},
+        {"title": "Run as non-root user", "code": "RUN addgroup -S appgroup && adduser -S appuser -G appgroup\nUSER appuser"}
+    ]
+    best_practices = [
+        "Use multi-stage builds to reduce image size and attack surface.",
+        "Avoid running containers as root when possible.",
+        "Never hardcode secrets in Dockerfiles.",
+        "Keep your base images updated with security patches.",
+        "Implement image signing for supply chain security."
+    ]
+
+    # --- New: Executive summary ---
+    executive_summary = {
         "risk_score": score,
         "cve_counts": cve_counts,
         "cve_count": cve_count,
@@ -175,12 +226,24 @@ def process_docker_image(image, report_dir, report_id):
         "secrets_found": secrets_found,
         "image": image
     }
-    
+
+    # --- New: Bundle ---
+    bundle = {
+        "executive_summary": executive_summary,
+        "components": components,
+        "remediation_steps": remediation_steps,
+        "upgrade_recommendations": upgrade_recommendations,
+        "config_suggestions": config_suggestions,
+        "best_practices": best_practices,
+        "sbom": sbom,
+        "cve_scan": grype_output
+    }
+
     json_path = os.path.join(report_dir, "report.json")
     pdf_path = os.path.join(report_dir, "report.pdf")
     manifest_path = os.path.join(report_dir, "manifest.sha256")
     sig_path = os.path.join(report_dir, "manifest.sig")
-    
+
     # Write JSON
     with open(json_path, "w") as f:
         json.dump(bundle, f, indent=2)
