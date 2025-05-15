@@ -119,3 +119,12 @@ POST `/report`
 
 ## Test Coverage
 - Expanded tests for /report, download endpoints, error handling, edge cases (see test_main.py)
+
+### Running Tests
+
+To run backend tests locally:
+
+```sh
+pip install --user -r requirements.txt
+pytest test_main.py
+```

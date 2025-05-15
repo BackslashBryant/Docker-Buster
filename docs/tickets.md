@@ -72,7 +72,8 @@
 **DB-5001** [ ] Regression test suite for UI rebuild validation  
 **DB-5002** [ ] Vitest/UI component test suite + e2e flows  
 **DB-5003** [ ] Backend API test coverage  
-**DB-5004** [ ] CI/CD test automation setup  
+**DB-5004** [~] CI/CD test automation setup  
+- Backend test automation implemented via GitHub Actions workflow (.github/workflows/backend-ci.yml)
 **DB-5005** [ ] Validate output for known CVEs and flagged secrets in test images  
 **DB-5006** [ ] Add test for detecting known CVE: CVE‑2021‑44228 in scanned images  
 **DB-5007** [ ] Verify PDF manifest checksum matches generated SHA-256 hash  
@@ -85,8 +86,8 @@
 **DB-6001** [ ] Playwright E2E: Renders "v0 App" instead of Docker Buster UI  
 **DB-6002** [ ] Playwright fails from root due to module resolution  
 **DB-6003** [ ] Frontend/backend URL mismatch: `Failed to fetch` error  
-**DB-6004** [ ] Backend missing `httpx` for test client  
-**DB-6005** [ ] Backend missing `python-multipart` for form parsing
+**DB-6004** [x] Backend missing `httpx` for test client  
+**DB-6005** [x] Backend missing `python-multipart` for form parsing
 
 ---
 
