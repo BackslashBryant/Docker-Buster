@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -65,6 +65,9 @@ def parse_input(input_str):
 class ReportRequest(BaseModel):
     image: str
 
+class ScanRequest(BaseModel):
+    image: str
+
 @app.post("/report")
 def generate_report(req: ReportRequest):
     try:
@@ -114,19 +117,29 @@ def generate_report(req: ReportRequest):
 def process_docker_image(image, report_dir, report_id):
     # Suppress GLib-GIO-WARNING logs
     os.environ["G_MESSAGES_DEBUG"] = "none"
-    # 1. Generate SBOM
-    syft_result = subprocess.run(
-        ["syft", image, "-o", "cyclonedx-json"],
-        capture_output=True, text=True, check=True
-    )
-    sbom = json.loads(syft_result.stdout)
-    
-    # 2. Run Grype for CVEs
-    grype_result = subprocess.run(
-        ["grype", image, "-o", "json"],
-        capture_output=True, text=True, check=True
-    )
-    grype_output = json.loads(grype_result.stdout)
+    try:
+        # 1. Generate SBOM
+        syft_result = subprocess.run(
+            ["syft", image, "-o", "cyclonedx-json"],
+            capture_output=True, text=True, check=True, encoding="utf-8", errors="replace"
+        )
+        sbom = json.loads(syft_result.stdout)
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Syft error: {e.stderr}\n{e.stdout}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Syft unexpected error: {str(e)}")
+
+    try:
+        # 2. Run Grype for CVEs
+        grype_result = subprocess.run(
+            ["grype", image, "-o", "json"],
+            capture_output=True, text=True, check=True, encoding="utf-8", errors="replace"
+        )
+        grype_output = json.loads(grype_result.stdout)
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Grype error: {e.stderr}\n{e.stdout}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Grype unexpected error: {str(e)}")
     
     # 3. Risk Score
     matches = grype_output.get("matches", [])
@@ -739,3 +752,157 @@ def get_report_status(report_id: str):
             "signature": os.path.exists(sig_path)
         }
     }
+
+@app.post("/cve-scan")
+def cve_scan(req: ScanRequest):
+    try:
+        # Run Grype for CVEs
+        grype_result = subprocess.run(
+            ["grype", req.image, "-o", "json"],
+            capture_output=True, text=True, check=True
+        )
+        grype_output = json.loads(grype_result.stdout)
+        matches = grype_output.get("matches", [])
+        cves = [
+            {
+                "id": m["vulnerability"].get("id"),
+                "severity": m["vulnerability"].get("severity"),
+                "description": m["vulnerability"].get("description"),
+                "fix_version": m["vulnerability"].get("fix", {}).get("versions", [None])[0] if m["vulnerability"].get("fix", {}).get("versions") else None
+            }
+            for m in matches
+        ]
+        return {"cves": cves}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Grype error: {e.stderr}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Invalid Grype JSON output.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+@app.post("/license-scan")
+def license_scan(req: ScanRequest):
+    try:
+        # Run Syft for SBOM
+        syft_result = subprocess.run(
+            ["syft", req.image, "-o", "cyclonedx-json"],
+            capture_output=True, text=True, check=True
+        )
+        sbom = json.loads(syft_result.stdout)
+        licenses = set()
+        for comp in sbom.get("components", []):
+            for lic in comp.get("licenses", []):
+                expr = lic.get("expression")
+                if expr:
+                    licenses.add(expr)
+        return {"licenses": sorted(list(licenses))}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Syft error: {e.stderr}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Invalid Syft JSON output.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+@app.post("/sbom/upload")
+def sbom_from_tar(file: UploadFile = File(...)):
+    """
+    Accepts a Docker image tarball (.tar), runs Syft, and returns CycloneDX JSON SBOM.
+    """
+    if not file.filename.endswith(".tar"):
+        raise HTTPException(status_code=400, detail="Only .tar files are supported.")
+    try:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tar_path = os.path.join(tmpdir, file.filename)
+            with open(tar_path, "wb") as f:
+                f.write(file.file.read())
+            # Run Syft on the tarball
+            syft_result = subprocess.run(
+                ["syft", tar_path, "-o", "cyclonedx-json"],
+                capture_output=True, text=True, check=True, encoding="utf-8", errors="replace"
+            )
+            sbom = json.loads(syft_result.stdout)
+            return sbom
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Syft error: {e.stderr}\n{e.stdout}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Invalid Syft JSON output.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing tarball: {str(e)}")
+
+@app.post("/sbom")
+def generate_sbom(req: ScanRequest):
+    """
+    Generate a CycloneDX JSON SBOM for a given Docker image using Syft.
+    """
+    try:
+        syft_result = subprocess.run(
+            ["syft", req.image, "-o", "cyclonedx-json"],
+            capture_output=True, text=True, check=True, encoding="utf-8", errors="replace"
+        )
+        sbom = json.loads(syft_result.stdout)
+        return sbom
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Syft error: {e.stderr}\n{e.stdout}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Invalid Syft JSON output.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Syft unexpected error: {str(e)}")
+
+@app.post("/risk-score")
+def risk_score(req: ScanRequest):
+    """
+    Calculate risk score, CVE counts, and secrets detection for a Docker image.
+    """
+    try:
+        # Run Syft for SBOM
+        syft_result = subprocess.run(
+            ["syft", req.image, "-o", "cyclonedx-json"],
+            capture_output=True, text=True, check=True, encoding="utf-8", errors="replace"
+        )
+        sbom = json.loads(syft_result.stdout)
+        # Run Grype for CVEs
+        grype_result = subprocess.run(
+            ["grype", req.image, "-o", "json"],
+            capture_output=True, text=True, check=True, encoding="utf-8", errors="replace"
+        )
+        grype_output = json.loads(grype_result.stdout)
+        matches = grype_output.get("matches", [])
+        cve_counts = {"Critical": 0, "High": 0, "Medium": 0, "Low": 0}
+        for m in matches:
+            sev = m["vulnerability"]["severity"]
+            if sev in cve_counts:
+                cve_counts[sev] += 1
+        license_violations = 0
+        for comp in sbom.get("components", []):
+            license_info = comp.get("licenses", [])
+            for lic in license_info:
+                expression = lic.get("expression", "")
+                if "proprietary" in expression.lower() or "unknown" in expression.lower():
+                    license_violations += 1
+        secrets_found = False
+        for comp in sbom.get("components", []):
+            envs = comp.get("properties", [])
+            for prop in envs:
+                if prop.get("name", "").upper() in ["AWS_SECRET_ACCESS_KEY", "SECRET_KEY", "API_KEY"]:
+                    secrets_found = True
+        score = (
+            cve_counts["Critical"] * 5 +
+            cve_counts["High"] * 3 +
+            cve_counts["Medium"] * 1 +
+            cve_counts["Low"] * 0.5 +
+            (license_violations * 2) +
+            (10 if secrets_found else 0)
+        )
+        score = min(10, score)
+        return {
+            "risk_score": round(score, 1),
+            "cve_counts": cve_counts,
+            "license_violations": license_violations,
+            "secrets_found": secrets_found
+        }
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Scan error: {e.stderr}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Invalid scan JSON output.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")

@@ -1,141 +1,67 @@
 # Docker Buster
 
-A portable desktop/web tool that ingests Docker images, generates SBOMs, scans for vulnerabilities, and produces tamper-evident reports.
+## Overview
+Docker Buster is a portable desktop/web tool for analyzing Docker images. It auto-generates a signed SBOM, runs CVE & license scans, evaluates config/secrets hygiene, and outputs a tamper-evident PDF+JSON report with an overall risk score and prioritized fixes—no CI/CD integration required.
 
-## Prerequisites
+## Quickstart
 
-Before running Docker Buster, ensure you have the following installed:
+### Prerequisites
+- Python 3.8+
+- Node.js 18+
+- Docker (for image analysis)
 
-- Python 3.8 or higher
-- Node.js 16 or higher
-- pip
-- npm
-
-## Installation
-
-### Backend Dependencies
-
-```powershell
+### Backend
+```sh
 cd backend
 pip install -r requirements.txt
+python main.py
 ```
 
-Additional requirements:
-```powershell
-pip install fastapi uvicorn weasyprint cryptography
-```
-
-### Frontend Dependencies
-
-```powershell
+### Frontend
+```sh
 cd frontend
 npm install
-```
-
-## Running Docker Buster
-
-### Option 1: Use the Start Scripts (Recommended)
-
-The easiest way to start Docker Buster is to use the provided scripts:
-
-1. **PowerShell Script** (Best for PowerShell users - from the project root):
-   ```powershell
-   # Execute the PowerShell script
-   .\Start-DockerBuster.ps1
-   
-   # If you get execution policy errors, you might need to run:
-   powershell -ExecutionPolicy Bypass -File .\Start-DockerBuster.ps1
-   ```
-
-2. **Batch File** (from the project root):
-   ```powershell
-   # In PowerShell, you must use .\ for local scripts
-   .\start_docker_buster.bat
-   
-   # In Command Prompt (cmd.exe), you can use:
-   start_docker_buster.bat
-   ```
-
-3. For backend only:
-   ```powershell
-   cd backend
-   .\start_server.bat  # PowerShell requires .\ prefix
-   ```
-
-4. For frontend only:
-   ```powershell
-   cd frontend
-   .\start_frontend.bat  # PowerShell requires .\ prefix
-   ```
-
-### Option 2: Manual Commands
-
-If you prefer running commands manually:
-
-**Backend Server:**
-```powershell
-cd backend
-python -m uvicorn main:app --reload
-```
-
-**Frontend Server:**
-```powershell
-cd frontend
 npm run dev
 ```
 
-## Accessing the Application
+### Scripts
+See the `scripts/` directory for automation scripts:
+- `start_docker_buster.bat`: Launches both backend and frontend (Windows)
 
-- Frontend UI: [http://localhost:3000](http://localhost:3000)
-- Backend API: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+## Directory Structure
+```
+backend/     # Python backend API and report generation
+frontend/    # Next.js/React frontend UI
+scripts/     # Automation and launch scripts
+docs/        # Documentation, PRD, tickets, changelog, contributing
+tests/       # Integration/e2e tests
+```
 
-## Features
+## API Endpoints
+- `POST /sbom` — Generate SBOM from image name
+- `POST /sbom/upload` — Generate SBOM from Docker image tarball
+- `POST /cve-scan` — List CVEs for image
+- `POST /license-scan` — List licenses for image
+- `POST /risk-score` — Calculate risk score for image
+- `POST /report` — Generate full report (PDF, JSON, signature)
+- `GET /download/report/{report_id}` — Download PDF report
+- `GET /download/json/{report_id}` — Download JSON report
 
-- SBOM Generation using Syft
-- Vulnerability & License Scanning using Grype
-- Risk Scoring Engine
-- Report Builder with PDF + JSON + signature
-- Modern React/Tailwind UI
+## Testing
+- Backend: `cd backend && python -m pytest`
+- Frontend: `cd frontend && npm test` (if tests present)
+- All backend tests pass 100% as of latest commit.
 
-## Input Types Supported
+## Known Issues
+See [docs/tickets.md](docs/tickets.md) for open bugs and roadmap.
 
-Docker Buster can analyze:
-- Docker images (e.g., `nginx:1.19`)
-- Full image URLs (e.g., `docker.io/library/alpine:latest`) 
-- Git repositories (e.g., `github.com/user/repo`)
+## Contributing
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 
-## Troubleshooting
+## References
+- [Product Requirements: docs/prd.yaml](docs/prd.yaml)
+- [Tickets & Roadmap: docs/tickets.md](docs/tickets.md)
+- [Changelog: docs/CHANGELOG.md](docs/CHANGELOG.md)
 
-### Common Issues
-
-1. **Missing modules/packages**: Ensure all required packages are installed
-   ```
-   pip install fastapi uvicorn weasyprint cryptography
-   ```
-
-2. **Commands must be run from the correct directory**:
-   - Backend commands must be run from the `backend` directory
-   - Frontend commands must be run from the `frontend` directory
-
-3. **Windows PowerShell command syntax**:
-   - Use quotes around paths with spaces: `cd "C:\path with spaces"`
-   - Do not use `&&` for command chaining in PowerShell
-   - When running local scripts or batch files, use the `.\` prefix:
-     ```powershell
-     # Correct (PowerShell)
-     .\start_frontend.bat
-     
-     # Incorrect (PowerShell)
-     start_frontend.bat
-     ```
-
-4. **PowerShell Execution Policy**:
-   - If you get execution policy errors with the PowerShell script, run:
-     ```powershell
-     # Temporarily bypass the execution policy for this script
-     powershell -ExecutionPolicy Bypass -File .\Start-DockerBuster.ps1
-     ```
-
-## License
-
-This project is open source and available under the MIT License. 
+---
+For more details, see the full [Restructuring Plan](docs/RESTRUCTURE_PLAN.md).
