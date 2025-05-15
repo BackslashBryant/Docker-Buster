@@ -3,6 +3,9 @@
 import { useState, FormEvent } from "react"
 import { Logo } from "./logo"
 import { Zap } from "lucide-react"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 type DockerScanProps = {
   status: string
@@ -14,6 +17,7 @@ type DockerScanProps = {
   downloadJson: (reportId: string) => Promise<boolean>
   reset: () => void
   simulateScan: () => void
+  setReport: (report: any) => void
 }
 
 type LeftPanelProps = {
@@ -22,14 +26,43 @@ type LeftPanelProps = {
 
 export function LeftPanel({ dockerScan }: LeftPanelProps) {
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [inputType, setInputType] = useState("image")
   const [containerImage, setContainerImage] = useState("")
+  const [registryLink, setRegistryLink] = useState("")
+  const [file, setFile] = useState<File | null>(null)
+  const [fileError, setFileError] = useState<string | null>(null)
 
   const handleScan = async (e: FormEvent) => {
     e.preventDefault()
-    if (containerImage.trim()) {
+    if (inputType === "image" && containerImage.trim()) {
       await dockerScan.scanImage(containerImage.trim())
+    } else if (inputType === "registry" && registryLink.trim()) {
+      await dockerScan.scanImage(registryLink.trim())
+    } else if (inputType === "file" && file) {
+      setFileError(null)
+      try {
+        const formData = new FormData()
+        formData.append("file", file)
+        const apiBase = process.env.NEXT_PUBLIC_API_URL || ''
+        const res = await fetch(`${apiBase}/sbom/upload`, {
+          method: "POST",
+          body: formData,
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          setFileError(err.detail || "Failed to generate SBOM from tarball.")
+          return
+        }
+        const sbom = await res.json()
+        dockerScan.setReport(sbom)
+        if (dockerScan.status !== 'complete') {
+          // If there's a way to set status, do it here; otherwise, the report UI will update on setReport
+        }
+      } catch (err: any) {
+        setFileError(err?.message || "Failed to upload and scan tarball.")
+      }
+      return
     } else {
-      // If no image is provided, run a demo scan
       dockerScan.simulateScan()
     }
   }
@@ -41,42 +74,80 @@ export function LeftPanel({ dockerScan }: LeftPanelProps) {
         <h1 className="text-2xl md:text-3xl font-bold mt-6 text-white">DOCKER BUSTER</h1>
         <p className="text-gray-300 mt-2">Container security at lightning speed</p>
       </div>
-
       <div className="w-full max-w-md">
         <form onSubmit={handleScan} className="space-y-6 md:space-y-8">
-          <div className="space-y-3">
-            <label htmlFor="container" className="block text-sm uppercase tracking-wide font-medium text-gray-400">
-              Container to Analyze
-            </label>
-            <input
-              type="text"
-              id="container"
-              value={containerImage}
-              onChange={(e) => setContainerImage(e.target.value)}
-              placeholder="nginx:1.19 or docker.io/library/alpine:latest"
-              className="w-full px-4 py-3 bg-[#2a2a3d] border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#1e1e2f] text-white transition-all duration-200"
-              tabIndex={0}
-              disabled={dockerScan.status === "scanning"}
-            />
-          </div>
-
-          <button
+          <Tabs value={inputType} onValueChange={setInputType} className="w-full">
+            <TabsList className="w-full grid grid-cols-3 mb-4">
+              <TabsTrigger value="image">Image Name</TabsTrigger>
+              <TabsTrigger value="registry">Registry Link</TabsTrigger>
+              <TabsTrigger value="file">Upload .tar</TabsTrigger>
+            </TabsList>
+            <TabsContent value="image">
+              <label htmlFor="container-image" className="block text-sm uppercase tracking-wide font-medium text-gray-400 mb-1">
+                Docker Image Name
+              </label>
+              <Input
+                type="text"
+                id="container-image"
+                value={containerImage}
+                onChange={e => setContainerImage(e.target.value)}
+                placeholder="nginx:1.19"
+                disabled={dockerScan.status === "scanning"}
+                autoComplete="off"
+              />
+            </TabsContent>
+            <TabsContent value="registry">
+              <label htmlFor="registry-link" className="block text-sm uppercase tracking-wide font-medium text-gray-400 mb-1">
+                Registry Link
+              </label>
+              <Input
+                type="text"
+                id="registry-link"
+                value={registryLink}
+                onChange={e => setRegistryLink(e.target.value)}
+                placeholder="docker.io/library/alpine:latest"
+                disabled={dockerScan.status === "scanning"}
+                autoComplete="off"
+              />
+            </TabsContent>
+            <TabsContent value="file">
+              <label htmlFor="image-tar" className="block text-sm uppercase tracking-wide font-medium text-gray-400 mb-1">
+                Docker Image Tarball (.tar)
+              </label>
+              <Input
+                type="file"
+                id="image-tar"
+                accept=".tar"
+                onChange={e => {
+                  setFileError(null)
+                  if (e.target.files && e.target.files[0]) {
+                    setFile(e.target.files[0])
+                  } else {
+                    setFile(null)
+                  }
+                }}
+                disabled={dockerScan.status === "scanning"}
+              />
+              {file && <div className="text-xs text-gray-400 mt-1">Selected: {file.name}</div>}
+              {fileError && <div className="text-xs text-red-400 mt-1">{fileError}</div>}
+            </TabsContent>
+          </Tabs>
+          <Button
             type="submit"
-            className="w-full flex items-center justify-center px-4 py-3 bg-[#3B82F6] hover:bg-[#2563EB] rounded-md font-medium transition-all duration-200 hover:shadow-[0_0_10px_rgba(59,130,246,0.4)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#1e1e2f] group disabled:opacity-50 disabled:cursor-not-allowed"
-            tabIndex={0}
+            className="w-full flex items-center justify-center"
             disabled={dockerScan.status === "scanning"}
           >
-            <Zap className="mr-2 h-5 w-5 group-hover:animate-spin group-hover:animate-once group-hover:animate-duration-[500ms] group-hover:animate-ease-in-out" />
-            {containerImage.trim() ? "Bust Container" : "Run Demo Scan"}
-          </button>
+            <Zap className="mr-2 h-5 w-5" />
+            {inputType === "image" && containerImage.trim() ? "Bust Container" :
+              inputType === "registry" && registryLink.trim() ? "Bust Registry" :
+              inputType === "file" && file ? "Bust Tarball" : "Run Demo Scan"}
+          </Button>
         </form>
-
         {dockerScan.error && (
           <div className="mt-4 p-4 bg-red-900/20 border border-red-800 rounded-md">
             <p className="text-sm font-medium text-red-400">Error: {dockerScan.error}</p>
           </div>
         )}
-
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="mt-6 md:mt-8 text-gray-400 hover:text-white text-sm flex items-center transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#1e1e2f] rounded-md px-2 py-1"
@@ -84,7 +155,6 @@ export function LeftPanel({ dockerScan }: LeftPanelProps) {
         >
           {showAdvanced ? "Hide" : "Show"} advanced options
         </button>
-
         {showAdvanced && (
           <div className="mt-4 p-4 bg-[#252538] rounded-md border border-gray-700">
             <p className="text-sm font-medium text-gray-400 mb-2">Upcoming features:</p>

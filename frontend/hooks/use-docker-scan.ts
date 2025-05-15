@@ -211,6 +211,7 @@ export function useDockerScan() {
     downloadPdf,
     downloadJson,
     reset,
-    simulateScan
+    simulateScan,
+    setReport
   }
 } 

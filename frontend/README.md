@@ -70,6 +70,9 @@ npm start
 - Vulnerability reporting and visualization
 - PDF and JSON report generation
 
+## Test Coverage
+- Expanded Playwright E2E tests for scan flow, report display, downloads, and error handling (see tests/example.spec.ts)
+
 ## Recent Updates
 
 The frontend has been completely rebuilt with v0.dev's design system and the latest Next.js features. This rebuild:
