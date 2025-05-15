@@ -1,36 +1,100 @@
+# Purpose: Product Requirements Document for Docker Buster
+# How to use: Reference for all functional, non-functional, and API requirements. Update as features evolve.
+# Last updated: 2024-06-09
+
 product_name: "Docker Buster"
-vision: |
-  A portable desktop/web tool that ingests a Docker image, auto‑generates a signed SBOM, runs CVE & license scans, evaluates config/secrets hygiene, and outputs a tamper‑evident PDF+JSON report with an overall risk score and prioritized fixes—no CI/CD integration required.
+
+vision: >
+  A portable desktop/web tool that ingests a Docker image, auto‑generates a signed SBOM,
+  runs CVE & license scans, evaluates config/secrets hygiene, and outputs a tamper‑evident
+  PDF+JSON report with an overall risk score and prioritized fixes—no CI/CD integration required.
+
 personas:
-  - Solo DevSecOps engineer validating third‑party containers.
-  - Security auditor needing offline evidence.
+  - Solo DevSecOps engineer validating third-party containers
+  - Security auditor needing offline evidence
+  - Basic user with limited CLI or container experience
+
 epics:
   - SBOM Generation
   - Vulnerability & License Scan
   - Risk Scoring Engine
-  - Report Builder (PDF + JSON + signature)
-  - Simple React/Tailwind UI
+  - Unified Report Builder (SBOM + Risk in one document)
+  - Lightweight React/Tailwind UI
+
 features:
   SBOM Generation:
-    F1: Support local images (syft -o cyclonedx-json).
+    - F1: Support local images using `syft -o cyclonedx-json`
+    - F10: Accept Docker image source via URL (e.g., Docker Hub, GitHub Container Registry)
+    - F11: Automatically pull and scan containers from supported registries
+
   Vulnerability & License Scan:
-    F2: Critical & High CVE listing via grype.
-    F3: SPDX license detection.
+    - F2: List Critical & High CVEs using Grype
+    - F3: Detect SPDX licenses from SBOM content
+
   Risk Scoring:
-    F4: Weighted score algorithm (CVE severity, secrets presence).
+    - F4: Apply weighted algorithm (CVE severity, config/secrets risk)
+
   Report Builder:
-    F5: Combine SBOM + scan into HTML → PDF (WeasyPrint).
-    F6: SHA‑256 manifest + detached signature.
+    - F5: Combine SBOM + scan + risk analysis into a single HTML → PDF report (WeasyPrint)
+    - F6: Add SHA‑256 manifest and detached GPG signature
+
   UI:
-    F7: Image name input + progress bar + download link.
+    - F7: Input field for image name or container URL
+    - F8: Progress indicator during scan
+    - F9: Download links for PDF and JSON reports
+    - F12: Auto-detect registry source (e.g., Docker Hub vs GitHub)
+    - F13: Show friendly error messages with actionable next steps
+
 non_functional:
-  - Runs offline on Windows/macOS/Linux.
-  - Completes full analysis < 90 seconds on 2‑vCPU laptop.
-  - Report bundle ≤ 10 MB.
+  - Works offline on Windows, macOS, and Linux
+  - Completes full analysis in under 90 seconds on 2‑vCPU machine
+  - Keeps total report bundle size ≤ 10 MB
+  - First-run experience includes onboarding/guided help
+  - No command-line usage required for full functionality
+  - Default configuration preselected for one-click scans
+  - Errors and warnings are written in plain language
+
 acceptance_tests:
-  - Given a known vulnerable image, report lists CVE‑2021‑44228.
-  - Generated PDF checksum matches manifest signature.
-  - Secrets detector flags “AWS_SECRET_ACCESS_KEY” in env vars.
+  - [ ] Given a known vulnerable image, report includes CVE‑2021‑44228
+  - [ ] Generated PDF checksum matches manifest signature
+  - [ ] Secrets scanner flags `AWS_SECRET_ACCESS_KEY` in environment variables
+  - [ ] A non-technical user can initiate a scan and download report without documentation
+  - [ ] Given a Docker Hub URL, the scan completes successfully
+  - [ ] Given a GitHub Container Registry URL, the scan completes successfully
+  - [ ] User receives plain-language guidance when a scan fails
+  - [ ] Generated PDF includes SBOM data and risk summary in one file
+
 out_of_scope:
-  - CI/CD integrations (GitHub Actions, GitLab).
-  - Kubernetes cluster scanning.
+  - CI/CD integrations (e.g., GitHub Actions, GitLab Pipelines)
+  - Kubernetes workload or cluster scanning
+
+constraints:
+  - No cloud connectivity required during analysis
+  - Only free/open-source dependencies (MIT, Apache 2.0, BSD)
+  - Report must be fully self-contained and portable (PDF + JSON under 10MB)
+
+dependencies:
+  - Syft (>=0.90.0)
+  - Grype (>=0.74.0)
+  - WeasyPrint (>=60.0)
+  - Python 3.11+
+  - Node.js 20+
+
+release_criteria:
+  - [ ] End-to-end scan completes on Windows/macOS/Linux
+  - [ ] Single-file PDF includes SBOM, vulnerabilities, and remediation summary
+  - [ ] UI fully functional and accessible without CLI usage
+  - [ ] All backend and frontend tests pass on CI/CD
+  - [ ] Basic user can complete scan in <5 clicks with no configuration
+
+references:
+  - https://cyclonedx.org/
+  - https://spdx.dev/
+  - https://owasp.org/www-project-cyclonedx/
+
+api:
+  description: >
+    The backend exposes the following endpoints, designed for UI integration and automated testing:
+    - `/report`: Generates full SBOM + scan + PDF/JSON bundle
+    - `/cve-scan`: Accepts image name or URL, returns CVE list (via Grype)
+    - `/license-scan`: Accepts image name or URL, returns SPDX licenses (via Syft)

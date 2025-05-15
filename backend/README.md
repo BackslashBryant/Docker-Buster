@@ -116,3 +116,6 @@ POST `/report`
 - The `/report` endpoint now returns a detailed, actionable JSON structure for use in UI/automation.
 - Remediation, upgrade, and best practices fields are populated with real or mock data as available.
 - See tickets.md for planned frontend and PDF/UX enhancements.
+
+## Test Coverage
+- Expanded tests for /report, download endpoints, error handling, edge cases (see test_main.py)
