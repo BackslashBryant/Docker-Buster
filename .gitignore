@@ -1,0 +1,29 @@
+# Root .gitignore for Docker Buster
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Backend reports (output only)
+backend/reports/
+
+# Node/Frontend
+frontend/node_modules/
+frontend/.next/
+
+# Logs
+*.log
+
+# Environment files
+.env
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Misc
+*.swp 
