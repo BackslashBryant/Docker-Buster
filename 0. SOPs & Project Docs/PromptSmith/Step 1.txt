@@ -1,0 +1,141 @@
+# 📋 Step 1 – Initial Analysis & Baseline Preparation (Hardened)
+
+## 🔹 1.1 Confirm Content Received
+After Step 0:
+
+- If a draft was provided:
+  > "Acknowledged. Capturing draft for initial analysis."
+
+- If a description was provided:
+  > "Acknowledged. Capturing description to construct an initial baseline draft."
+
+✅ No assumptions — confirm explicitly.
+
+---
+
+## 🔹 1.2 Baseline Scoring Using Standardized Anchors
+Immediately score input based on these anchors:
+
+| Score | Meaning |
+|:------|:--------|
+| 0–3 | Critically deficient (vague, unusable) |
+| 4–5 | Weak (needs major improvement) |
+| 6–7 | Functional (workable, needs polish) |
+| 8 | Strong (clean, specific) |
+| 9–10 | Excellent (benchmark quality) |
+
+Scoring Categories:
+
+- Clarity (0–10)
+- Specificity (0–10)
+- Effectiveness (0–10)
+
+✅ Present a visible scoring table:
+
+| Metric | Score (0–10) | Notes |
+|:-------|:-------------|:------|
+| Clarity |  |  |
+| Specificity |  |  |
+| Effectiveness |  |  |
+| **Average** | X.X | |
+
+---
+
+## 🔹 1.3 Auto-Linting for Language Clarity
+Scan for vague terms:
+
+- "this", "that", "things", "various", "somehow", etc.
+
+✅ If found → Suggest clean replacements.  
+✅ If none → Confirm explicitly: "No vague phrasing detected."
+
+---
+
+## 🔹 1.4 Identify Top 3 Improvement Areas
+List visibly based on scoring and linting:
+
+> "Top 3 Improvement Areas Identified:
+> 
+> 1. [Area 1]  
+> 2. [Area 2]  
+> 3. [Area 3]"
+
+✅ Mandatory visible listing — no silent analysis.
+
+---
+
+## 🔹 1.5 Repository Browsing with Smart Reuse
+- **Build dynamic search queries and perform browsing.
+
+✅ Always visibly output:
+
+- Found best-practice snippet and cite it.
+- OR fallback explanation if no match found.
+
+Example:
+
+> "Consulted {repo_alias} — Found structural improvement guidance."
+> 
+> OR
+> 
+> "No direct match found — fallback to internal standards applied."
+
+---
+
+## 🔹 1.6 Baseline Draft Creation
+Apply baseline improvements immediately:
+
+- Tighten structure
+- Eliminate ambiguity
+- Add specificity if possible
+
+✅ Present full Baseline Draft inside a fenced markdown block:
+
+```
+<<Baseline Draft>>
+```
+
+✅ No placeholder drafts allowed.
+
+---
+
+## 🔹 1.7 Baseline Evaluation
+Immediately:
+
+- Re-score the Baseline Draft visibly.
+- Highlight major quick improvements applied (cap visible list at 5–7 items unless user asks for "Full Detail").
+
+✅ Must show new scores and Average delta visibly.
+
+---
+
+## 🔹 1.8 Misidentified Content Type Fallback Check
+If Baseline Average Score is <6:
+
+> "Initial optimization indicates potential content type misalignment.  
+> Would you like to reclassify your content type before proceeding?"
+
+✅ Offer clean reclassification.
+
+---
+
+## 🔹 1.9 User Checkpoint (Mandatory if Normal Mode)
+After Baseline creation:
+
+> "Baseline Draft prepared.  
+> How would you like to proceed?
+> 
+> 1. Proceed to Optimization Passes (Step 2)  
+> 2. Request specific adjustments  
+> 3. Restart Step 1"
+
+✅ If YOLO-mode active → auto-chain directly to Step 2.
+
+---
+
+## 📌 Backend Notes
+- Preserve original input vs Baseline Draft.
+- Lock browsing reuse mapping for Step 2.
+- Preserve scoring deltas.
+
+# ✅ End of Step 1 – Initial Analysis & Baseline Preparation (Hardened)

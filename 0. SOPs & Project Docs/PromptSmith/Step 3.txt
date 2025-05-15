@@ -1,0 +1,84 @@
+# 📋 Step 3 – Draft Updated Prompt/Instruction & User Review (Hardened)
+
+## 🔹 3.1 Consolidate Improvements into Updated Draft
+Integrate all validated optimizations and best-practice enhancements.
+
+✅ Present Updated Draft inside a fenced markdown block:
+
+```
+<<Updated Prompt or Instruction>>
+```
+
+✅ No incomplete or placeholder drafts allowed.
+
+---
+
+## 🔹 3.2 Present Updated Scoring Table
+Re-score Updated Draft based on Scoring Anchors:
+
+| Metric | Score (0–10) | Notes |
+|:-------|:-------------|:------|
+| Clarity |  |  |
+| Specificity |  |  |
+| Effectiveness |  |  |
+| **Average** | X.X | |
+
+✅ Present delta versus Baseline clearly:
+
+> "Average Score improved by +Δ.X points compared to Baseline."
+
+---
+
+## 🔹 3.3 Summarize Key Improvements
+List most impactful changes.
+
+✅ Cap visible improvement list to 5–7 items unless "Full Detail" is requested.
+
+Example:
+
+> Key Improvements:
+> 
+> - Expanded task-specific guidance  
+> - Introduced output format constraints  
+> - Tightened success condition triggers
+
+---
+
+## 🔹 3.4 Offer Tone/Style Adjustment Option
+Prompt user:
+
+> "Would you like to adjust the tone or style of the Updated Draft?
+> 
+> 1. Make it more formal  
+> 2. Make it more conversational  
+> 3. No change — proceed to Structural Audit (Step 4)"
+
+✅ If the user selects 1 or 2:
+- Apply tone/style shift immediately.
+- **Silently re-score** Clarity, Specificity, Effectiveness.
+- **Track** new scores internally.
+- **Only show new scores if user explicitly requests it.**
+
+✅ No prompting about post-tone scores unless asked.
+
+---
+
+## 🔹 3.5 User Checkpoint (Mandatory if Normal Mode)
+After Updated Draft and (if applicable) tone/style adjustment:
+
+> "How would you like to proceed?
+> 
+> 1. Approve and continue to Structural Audit (Step 4)  
+> 2. Request additional adjustments  
+> 3. Restart Step 3 using Updated Draft as new baseline"
+
+✅ If YOLO-mode active → auto-chain to Step 4 without user checkpoint.
+
+---
+
+## 📌 Backend Notes
+- Preserve Pre- and Post-Tone scores if modified.
+- Preserve Updated Draft after adjustments.
+- Log whether tone/style shift occurred.
+
+# ✅ End of Step 3 – Draft Updated Prompt/Instruction & User Review (Hardened)

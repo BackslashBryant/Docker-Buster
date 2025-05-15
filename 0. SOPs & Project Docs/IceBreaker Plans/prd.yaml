@@ -1,0 +1,179 @@
+current_state:
+  summary: |
+    As of now, the project directory is completely blank. No code, infrastructure, configuration, or scaffolds exist. All work will begin from zero.
+
+context:
+  overview: |
+    IceBreaker is a proximity-based, ephemeral connection app for Gen Z users who want spontaneous, anonymous real-world interactions. No profiles. No feeds. No pressure.
+
+  core_features:
+    - Random username + 8-bit avatar generator
+    - Interest selection (min. 3)
+    - Radar discovery with pulsing proximity UI
+    - Ephemeral proximity based chat sessions
+    - Visibility toggle
+    - Panic button for safety
+
+  user_experience:
+    personas:
+      - Gen Z students
+      - Urban explorers
+      - Event attendees
+    key_user_flows:
+      - Onboarding → Auth → Avatar → Interests → Radar → Ephemeral Chat
+    ui_ux_style:
+      - Retro-minimal
+      - Pixel avatars
+      - Motion-light
+      - Swipe-first
+
+  user_profile:
+    name: Gen Z Social Explorers
+    age_range: 18–26
+    location: Urban areas, campuses, events
+    values:
+      - Spontaneity > curation
+      - Presence > profiles
+      - Privacy-first
+    habits:
+      - Daily users of TikTok, Spotify, Discord
+      - Familiar with ephemeral formats
+      - Avoid long bios or identity exposure
+    usage_contexts:
+      - Between classes
+      - At concerts/festivals
+      - Co-working or exploring cities
+    red_flags:
+      - Avoids social spontaneity
+      - Seeks curated dating experience
+      - Requires deep profiles or history
+
+development_roadmap:
+  phase_1:
+    name: Foundation Setup
+    status: not started
+    tasks:
+      - Init monorepo, Next.js frontend (not started)
+      - Supabase project setup (not started)
+      - CI/CD via GitHub Actions (not started)
+
+  phase_2:
+    name: Core MVP Features
+    status: not started
+    tasks:
+      - Magic Link auth + anon identity (not started)
+      - Interest selector (min 3) (not started)
+      - Radar UI with mock data (not started)
+      - Ephemeral chat screen (2 min timer) (not started)
+
+  phase_3:
+    name: Safety Layer
+    status: not started
+    tasks:
+      - Visibility toggle (not started)
+      - Global panic button (not started)
+      - Accessibility pass (not started)
+
+  phase_4:
+    name: Alpha Feedback
+    status: not started
+    tasks:
+      - Preview build (not started)
+      - Internal user invite (not started)
+      - Feedback collection (not started)
+
+  phase_5:
+    name: Enrichment
+    status: not started
+    tasks:
+      - Nango OAuth sync (not started)
+      - Spotify/YouTube interest mapping (not started)
+      - Branding polish (not started)
+
+  phase_6:
+    name: Scaling Readiness
+    status: not started
+    tasks:
+      - Supabase realtime radar (not started)
+      - Redis / RLS optimization (not started)
+      - RevenueCat skeleton (not started)
+
+logical_dependency_chain:
+  - Phase 1 must complete to bootstrap system and Supabase
+  - Phase 2 provides all core interaction loops
+  - Phase 3 is mandatory for MVP safety release
+  - Phase 4 enables real-world validation
+  - Phase 5 is optional UX enrichment
+  - Phase 6 prepares for open beta and growth
+
+risks_and_mitigations:
+  - Risk: Feature creep during onboarding
+    mitigation: Lock to 3 screens max before radar
+  - Risk: OAuth setup delays
+    mitigation: Use Nango with fallback scopes
+  - Risk: Realtime issues under load
+    mitigation: Mock radar for MVP; add Supabase Channels post-beta
+  - Risk: PII leakage
+    mitigation: No real names, no location stored, enforce RLS
+
+appendix:
+  specs:
+    design:
+      theme: Retro-tech
+      primary_color: "#4D84C3"
+      accent_color: "#EC9C38"
+      background: "#2C3A59"
+      font: Monospaced
+      avatar_style: 8-bit, 32x32 grid
+    authentication:
+      method: Supabase Magic Link
+      identity: Random username + avatar
+      no_pii: true
+    interest_selection:
+      min_required: 3
+      enrichment: Optional via OAuth (Spotify, YouTube via Nango)
+    radar:
+      UI: Pulse animation + nearby cards
+      update_interval: 2–4 sec
+      data_source: mock → Supabase Realtime (Phase 6)
+    chat:
+      type: Ephemeral
+      session_length: 2 min
+      storage: none
+      expiration_modal: true
+    visibility:
+      toggle: true
+      location: settings
+    panic_button:
+      global_fab: true
+      behavior: confirm modal → alert event (future)
+    accessibility:
+      - ARIA roles
+      - Focus states
+      - Reduced motion support
+    responsiveness:
+      - sm: 100% width
+      - md: 2-col grid
+      - lg: 3–4-col grid
+    performance:
+      - Lazy-load avatars and radar cards
+      - Animate only in-view components
+
+  brand_language:
+    tone: Playful, minimal, low-pressure
+    keywords: Break, drift, vanish, vibe
+    default_voice: "Festival guide energy" — casual, opt-in
+    taglines:
+      - "Break the Ice, Not Your Privacy"
+      - "You're Closer Than You Think"
+      - "Temporary Chats. Real Moments"
+    examples:
+      onboarding_cta: "You in? Tap to break the ice."
+      radar_idle: "Nobody nearby yet... but you're ready."
+      panic_triggered: "Help is on the way. You're not alone."
+      chat_expiring: "This chat melts soon. No pressure."
+
+  optional_dependencies:
+    - name: github-mcp-server
+      url: https://github.com/github/github-mcp-server
+      purpose: "Monorepo automation and GitHub workflow management (optional, infra only)"

@@ -64,4 +64,4 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 - [Changelog: docs/CHANGELOG.md](docs/CHANGELOG.md)
 
 ---
-For more details, see the full [Restructuring Plan](docs/RESTRUCTURE_PLAN.md). 
+For more details, see the full [Restructuring Plan](docs/RESTRUCTURE_PLAN.md).

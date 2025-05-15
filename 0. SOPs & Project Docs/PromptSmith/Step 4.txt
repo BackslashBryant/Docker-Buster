@@ -1,0 +1,101 @@
+# 📋 Step 4 – Deep Structural Audit & Final Refinements (Hardened)
+
+## 🔹 4.1 Full Structural Checklist Audit
+Perform a full audit against:
+
+| Audit Item | Description |
+|:-----------|:------------|
+| Missing Prerequisites | Undefined setup, assumptions, or background |
+| Ambiguities | Vague pronouns, unclear task guidance |
+| Redundancies | Duplicate phrasing or repeated concepts |
+| Formatting Inconsistencies | Markdown formatting issues, structure errors |
+| Best-Practice Violations | Missing scaffolds (Few-Shot, Chain-of-Thought), lack of explicit success criteria |
+
+✅ List all issues and proposed fixes visibly — no silent audits allowed.
+
+---
+
+## 🔹 4.2 Issue and Fix Reporting (Mandatory)
+Report format:
+
+> Issue: [short description]  
+> Proposed Fix: [short proposed correction]
+
+✅ Every issue must have an actionable fix paired visibly.
+
+---
+
+## 🔹 4.3 Repository Browsing or Smart Reuse for Structural Patterns
+- **If structural browsing was done already:** reuse prior best-practice findings.
+- **If new structural needs emerge:** perform browsing dynamically.
+- Summarize found examples or fallback cleanly if no match found.
+
+✅ Always report browsing outcome visibly.
+
+Example:
+
+> "Consulted {repo_alias} — Found structural enhancement guidance."
+> 
+> OR
+> 
+> "No direct match found — fallback to internal standards."
+
+---
+
+## 🔹 4.4 Apply Structural Refinements
+Incorporate all required fixes immediately.
+
+✅ Present fully Refined Working Draft inside fenced markdown block:
+
+```
+<<Refined Working Draft>>
+```
+
+✅ No missing corrections allowed.
+
+---
+
+## 🔹 4.5 Post-Audit Re-Scoring
+Re-score the fully Refined Working Draft:
+
+| Metric | Previous | New | Δ |
+|:-------|:---------|:----|:--|
+| Clarity |  |  |  |
+| Specificity |  |  |  |
+| Effectiveness |  |  |  |
+| **Average** | X.X | X.X | ΔX.X |
+
+✅ Always visibly show updated scores.
+
+---
+
+## 🔹 4.6 Micro-Optimization Clause (If Needed)
+If the Average Score is still <9 after audit:
+
+- Perform one targeted micro-optimization.
+- Re-score silently if in YOLO-mode; visibly if in Normal mode.
+
+✅ If in YOLO-mode:  
+Auto-chain into Step 5 after micro-optimization without asking.
+
+✅ If in Normal mode:  
+Offer checkpoint to user.
+
+---
+
+## 🔹 4.7 Declare Audit Completion and Chain
+Once audit and (if needed) micro-optimization is complete:
+
+> "Structural Audit and Final Refinements Complete.  
+> Proceeding to Final Delivery and Reporting (Step 5)."
+
+✅ Mandatory chaining without user pause in YOLO-mode.
+
+---
+
+## 📌 Backend Notes
+- Preserve all audit findings.
+- Preserve Refined Working Draft.
+- Record whether micro-optimization was triggered.
+
+# ✅ End of Step 4 – Deep Structural Audit & Final Refinements (Hardened)
