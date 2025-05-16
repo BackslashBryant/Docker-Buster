@@ -1,0 +1,46 @@
+name: Versioning & Release Automation
+
+on:
+  push:
+    branches: [main, 'release/*']
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check for VERSION file
+        run: |
+          if [ ! -f VERSION ]; then echo "VERSION file not found!" && exit 1; fi
+      - name: Get version
+        id: get_version
+        run: |
+          VERSION=$(cat VERSION)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git tag | grep -q "v$VERSION"; then
+            echo "Tag v$VERSION already exists. Skipping tag creation."
+            echo "tag_exists=true" >> $GITHUB_ENV
+          else
+            echo "tag_exists=false" >> $GITHUB_ENV
+          fi
+      - name: Create tag if needed
+        if: env.tag_exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag v$VERSION
+          git push origin v$VERSION
+      - name: Create GitHub Release
+        if: env.tag_exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          body_path: CHANGELOG.md 
