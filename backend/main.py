@@ -17,6 +17,7 @@ from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 from datetime import datetime
+import requests
 
 app = FastAPI()
 
@@ -34,9 +35,10 @@ REPORTS_DIR = "reports"
 os.makedirs(REPORTS_DIR, exist_ok=True)
 
 # Parse different input types
+# Only remote registry images, URLs, or tarballs are supported. Local Docker is never used.
 def parse_input(input_str):
-    # Docker image tag format (e.g., alpine:latest, docker.io/library/nginx:1.19)
-    docker_pattern = r"^(([a-z0-9]+([-._][a-z0-9]+)*(/[a-z0-9]+([-._][a-z0-9]+)*)*))?([a-z0-9]+.*)(:[a-z0-9._-]+)?$"
+    # Registry image tag format (e.g., alpine:latest, docker.io/library/nginx:1.19)
+    image_pattern = r"^(([a-z0-9]+([-._][a-z0-9]+)*(/[a-z0-9]+([-._][a-z0-9]+)*)*))?([a-z0-9]+.*)(:[a-z0-9._-]+)?$"
     
     # Git repo format (e.g., github.com/user/repo)
     git_pattern = r"^(github\.com|gitlab\.com|bitbucket\.org)/[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+(/.*)?$"
@@ -44,9 +46,9 @@ def parse_input(input_str):
     # URL format (e.g., https://example.com/path)
     url_pattern = r"^(https?|ftp)://[^\s/$.?#].[^\s]*$"
     
-    if re.match(docker_pattern, input_str):
-        # Handle Docker image
-        return {"type": "docker", "value": input_str}
+    if re.match(image_pattern, input_str):
+        # Handle registry image (never local Docker)
+        return {"type": "image", "value": input_str}
     elif re.match(git_pattern, input_str):
         # Handle Git repo
         # For demonstration, we'll prepend https:// if not already present
@@ -57,8 +59,8 @@ def parse_input(input_str):
         # Handle URL
         return {"type": "url", "value": input_str}
     else:
-        # Default to treating it as a Docker image
-        return {"type": "docker", "value": input_str}
+        # Default to treating it as a registry image
+        return {"type": "image", "value": input_str}
 
 # ... previous endpoints ...
 
@@ -70,6 +72,9 @@ class ScanRequest(BaseModel):
 
 @app.post("/report")
 def generate_report(req: ReportRequest):
+    """
+    Accepts a remote registry image name, URL, or tarball upload. Local Docker is never used or required.
+    """
     try:
         # Parse the input
         parsed_input = parse_input(req.image)
@@ -82,9 +87,9 @@ def generate_report(req: ReportRequest):
         os.makedirs(report_dir, exist_ok=True)
         
         # Process based on input type
-        if input_type == "docker":
-            # Process Docker image
-            return process_docker_image(input_value, report_dir, report_id)
+        if input_type == "image":
+            # Process registry image (never local Docker)
+            return process_registry_image(input_value, report_dir, report_id)
         elif input_type == "git":
             # For demo purposes, we'll just return a simplified response for Git repos
             return {
@@ -114,8 +119,26 @@ def generate_report(req: ReportRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing input: {str(e)}")
 
-def process_docker_image(image, report_dir, report_id):
-    # Suppress GLib-GIO-WARNING logs
+def fetch_circl_cve_details(cve_id):
+    """
+    Fetch CVE details from CIRCL CVE Search API.
+    Returns dict with CIRCL data or None if not found/error.
+    """
+    try:
+        url = f"https://cve.circl.lu/api/cve/{cve_id}"
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return None
+
+def process_registry_image(image, report_dir, report_id):
+    """
+    Analyze a remote registry image or tarball. Never uses local Docker.
+    """
+    # Suppress GLib-GIO-WARNING logs from WeasyPrint and related libraries
+    # This environment variable disables debug messages that can clutter logs
     os.environ["G_MESSAGES_DEBUG"] = "none"
     try:
         # 1. Generate SBOM
@@ -215,12 +238,15 @@ def process_docker_image(image, report_dir, report_id):
         for m in matches:
             if m["artifact"]["name"] == comp.get("name"):
                 vuln = m["vulnerability"]
+                cve_id = vuln.get("id")
+                circl_data = fetch_circl_cve_details(cve_id) if cve_id else None
                 comp_vulns.append({
-                    "id": vuln.get("id"),
+                    "id": cve_id,
                     "severity": vuln.get("severity"),
                     "description": vuln.get("description"),
                     "fix_version": vuln.get("fix", {}).get("versions", [None])[0] if vuln.get("fix", {}).get("versions") else None,
-                    "references": vuln.get("references", [])
+                    "references": vuln.get("references", []),
+                    "circl": circl_data if circl_data else None
                 })
         components.append({
             "name": comp.get("name"),
@@ -676,11 +702,10 @@ def process_docker_image(image, report_dir, report_id):
     </html>
     """
     pdf_path = os.path.join(report_dir, "report.pdf")
-    # Add headless mode for WeasyPrint if available
-    weasyprint_kwargs = {}
-    if os.environ.get("WEASYPRINT_HEADLESS", "false").lower() == "true":
-        weasyprint_kwargs["presentational_hints"] = True  # No real headless mode, but placeholder for future
-    HTML(string=html).write_pdf(pdf_path, **weasyprint_kwargs)
+    # WeasyPrint does not support a true headless mode (unlike browser-based tools).
+    # The previous placeholder for 'headless' mode is removed for clarity.
+    # If future versions add such a feature, update here accordingly.
+    HTML(string=html).write_pdf(pdf_path)
     
     # 6. SHA-256 manifest
     sha256 = hashlib.sha256()
@@ -763,15 +788,18 @@ def cve_scan(req: ScanRequest):
         )
         grype_output = json.loads(grype_result.stdout)
         matches = grype_output.get("matches", [])
-        cves = [
-            {
-                "id": m["vulnerability"].get("id"),
-                "severity": m["vulnerability"].get("severity"),
-                "description": m["vulnerability"].get("description"),
-                "fix_version": m["vulnerability"].get("fix", {}).get("versions", [None])[0] if m["vulnerability"].get("fix", {}).get("versions") else None
-            }
-            for m in matches
-        ]
+        cves = []
+        for m in matches:
+            vuln = m["vulnerability"]
+            cve_id = vuln.get("id")
+            circl_data = fetch_circl_cve_details(cve_id) if cve_id else None
+            cves.append({
+                "id": cve_id,
+                "severity": vuln.get("severity"),
+                "description": vuln.get("description"),
+                "fix_version": vuln.get("fix", {}).get("versions", [None])[0] if vuln.get("fix", {}).get("versions") else None,
+                "circl": circl_data if circl_data else None
+            })
         return {"cves": cves}
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=f"Grype error: {e.stderr}")

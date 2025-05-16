@@ -5,3 +5,4 @@ weasyprint
 cryptography
 httpx
 python-multipart
+requests

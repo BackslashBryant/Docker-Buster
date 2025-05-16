@@ -10,6 +10,8 @@
    ```
 2. Ensure [Syft](https://github.com/anchore/syft) and [Grype](https://github.com/anchore/grype) are installed and available in your PATH.
 
+> **Note:** Docker is NOT required. The backend works with remote image URLs, package names (from registries), or tarball uploads. Local Docker is never used or needed.
+
 ### Run the API
 
 ```sh
@@ -19,24 +21,24 @@ uvicorn main:app --reload
 ### Usage
 
 POST `/sbom`
-- Body: `{ "image": "<docker-image-name>" }`
+- Body: `{ "image": "<image name, URL, or tarball path>" }`
 - Returns: CycloneDX JSON SBOM or error
 
 POST `/cve-scan`
-- Body: `{ "image": "<docker-image-name>" }`
-- Returns: List of Critical & High CVEs
+- Body: `{ "image": "<image name, URL, or tarball path>" }`
+- Returns: List of Critical & High CVEs, now enriched with CIRCL CVE Search data (exploitability, remediation, references, etc.)
 
 POST `/license-scan`
-- Body: `{ "image": "<docker-image-name>" }`
+- Body: `{ "image": "<image name, URL, or tarball path>" }`
 - Returns: List of unique SPDX license IDs found in the image
 
 POST `/risk-score`
-- Body: `{ "image": "<docker-image-name>" }`
+- Body: `{ "image": "<image name, URL, or tarball path>" }`
 - Returns: Weighted risk score, CVE counts, and secrets detection
 
 POST `/report`
-- Body: `{ "image": "<docker-image-name>" }`
-- Returns: Rich JSON report (see below), plus PDF/JSON files in the reports directory, with manifest and signature.
+- Body: `{ "image": "<image name, URL, or tarball path>" }`
+- Returns: Rich JSON report (see below), plus PDF/JSON files in the reports directory, with manifest and signature. CVE data is now enriched with CIRCL CVE Search details.
 
 #### Example `/report` Response
 ```json
